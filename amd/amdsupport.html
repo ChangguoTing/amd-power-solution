@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AMD AI Power Solution Support</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f9fafb; /* 下半部背景 */
+            color: #333;
+            height: 100%;
+            min-width: 1200px;
+            overflow-x: auto; 
+            /* 讓 Footer 自然流動在底部 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- 頂部導航欄 --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            height: 75px;
+            background-color: #000;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 25px; }
+        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s;}
+        .back-home:hover { color: #ED1C24; }
+        .amd-logo { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        .nav-right i { font-size: 18px; color: #fff; cursor: pointer; }
+
+        /* --- Hero Section (黑色區域) --- */
+        .support-hero {
+            background-color: #000;
+            color: #fff;
+            padding: 150px 20px 80px 20px; /* 調整高度 */
+            text-align: center;
+            background-image: radial-gradient(circle at center, #2a2a2a 0%, #000000 100%);
+            border-bottom: 4px solid #ED1C24; 
+            flex-shrink: 0;
+        }
+
+        .support-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            letter-spacing: 1px;
+        }
+
+        .support-hero h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #ddd;
+            margin: 0;
+        }
+
+        /* --- 選擇卡片區域 --- */
+        .selection-section {
+            padding: 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1; /* 讓內容撐開，Footer 會被推到底部 */
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 60px; /* 縮小一點間距以容納三個卡片 */
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #fff;
+            border: 2px solid #8BC34A; /* 綠色邊框 */
+            border-radius: 6px;
+            padding: 25px;
+            width: 300px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #000;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            flex-grow: 1; 
+        }
+
+        .card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-link {
+            color: #0078D7;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .card-link:hover {
+            color: #005a9e;
+            text-decoration: underline;
+        }
+
+        /* --- 頁尾 (AMD Footer Style) --- */
+        footer {
+            background-color: #000;
+            color: #fff;
+            padding: 60px 40px 20px 40px;
+            border-top: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .footer-top {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            border-bottom: 1px solid #333;
+            padding-bottom: 40px; margin-bottom: 40px;
+        }
+
+        .subscribe-box {
+            background: linear-gradient(90deg, #1f1f1f, #000);
+            padding: 20px 30px;
+            border: 1px solid #333;
+            display: inline-block;
+        }
+        .subscribe-text {
+            font-size: 16px; font-weight: 600; color: #fff;
+        }
+
+        .social-icons {
+            display: flex; gap: 20px;
+        }
+        .social-icons a { color: #fff; font-size: 20px; transition: color 0.2s; }
+        .social-icons a:hover { color: #ED1C24; }
+
+        .footer-links {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            gap: 40px; margin-bottom: 60px;
+        }
+
+        .col-title {
+            font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #fff;
+        }
+        .col-list { list-style: none; padding: 0; margin: 0; }
+        .col-list li { margin-bottom: 10px; }
+        .col-list a {
+            color: #999; text-decoration: none; font-size: 14px; transition: color 0.2s;
+        }
+        .col-list a:hover { color: #fff; text-decoration: underline; }
+
+        .footer-bottom {
+            max-width: 1200px; margin: 0 auto;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px;
+        }
+        .legal-links {
+            display: flex; gap: 15px; flex-wrap: wrap;
+        }
+        .legal-links a {
+            color: #666; text-decoration: none; font-size: 12px;
+        }
+        .legal-links a:hover { color: #999; }
+
+        .feedback-btn {
+            position: fixed; right: 0; top: 50%; transform: translateY(-50%) rotate(-90deg) translateX(50%);
+            transform-origin: right bottom;
+            background: #666; color: #fff; padding: 10px 20px;
+            font-size: 14px; cursor: pointer; z-index: 999;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-left">
+            <a href="index.html" class="back-home">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+            <div style="width: 20px;"></div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
+        </div>
+
+        <div class="nav-right">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-globe"></i>
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="support-hero">
+        <h1>Welcome to AMD AI Power Solution</h1>
+        <h2>Find Power Solution for AMD Standard & Custom Design</h2>
+    </div>
+
+    <div class="selection-section">
+        <div class="cards-container">
+            
+            <div class="card">
+                <h3>Introduction</h3>
+                <p>Overview of AMD Power Solutions and Partner Suppliers. Learn about our ecosystem and standardized approaches to data center power.</p>
+                <div class="card-links">
+                    <a href="Introduction.html" class="card-link">AI Power Solution Introduction &gt;</a>
+                    <a href="partner.html" class="card-link">Partners &gt;</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Solution Finder & BOM Generator (AMD STD)</h3>
+                <p>Select the appropriate power solution and generate the Bill of Materials (BOM) based on your specific requirements.</p>
+                <div class="card-links">
+                    <a href="page-orv3.html" class="card-link">Solution Selection & BOM &gt;</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Custom Design</h3>
+                <p>AMD delivers customized solutions to address the unique requirements of CSP data centers, tailored for high-performance AI workloads.</p>
+                <div class="card-links">
+                    <a href="amdflat.html" class="card-link">Arcadia with Tesseract Rack Platform &gt;</a>
+                    <a href="amdspectra.html" class="card-link">Arcadia with Spectra Rack Platform &gt;</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-top">
+            <div class="subscribe-box">
+                <div class="subscribe-text">Subscribe to the latest news<br>from AMD</div>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fas fa-times"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <div>
+                <div class="col-title">Company</div>
+                <ul class="col-list">
+                    <li><a href="#">About AMD</a></li>
+                    <li><a href="#">Management Team</a></li>
+                    <li><a href="#">Corporate Responsibility</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">News & Events</div>
+                <ul class="col-list">
+                    <li><a href="#">Newsroom</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">Media Library</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">Resources</div>
+                <ul class="col-list">
+                    <li><a href="#">Developer Central</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Webinars</a></li>
+                    <li><a href="#">Explore Resources</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">Partners</div>
+                <ul class="col-list">
+                    <li><a href="#">AMD Partner Hub</a></li>
+                    <li><a href="#">Authorized Distributors</a></li>
+                    <li><a href="#">AMD University Program</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">Investors</div>
+                <ul class="col-list">
+                    <li><a href="#">Investor Relations</a></li>
+                    <li><a href="#">Financial Information</a></li>
+                    <li><a href="#">Board of Directors</a></li>
+                    <li><a href="#">Governance Documents</a></li>
+                    <li><a href="#">SEC Filings</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="legal-links">
+                <a href="#">Terms and Conditions</a>
+                <a href="#">Privacy</a>
+                <a href="#">Trademarks</a>
+                <a href="#">Supply Chain Transparency</a>
+                <a href="#">Fair & Open Competition</a>
+                <a href="#">UK Tax Strategy</a>
+                <a href="#">Cookies Policy</a>
+                <a href="#">Cookie Settings</a>
+            </div>
+            <div>
+                <i class="fas fa-universal-access" style="font-size: 24px; color: #fff;"></i>
+            </div>
+        </div>
+    </footer>
+
+    <div class="feedback-btn">Feedback</div>
+
+</body>
+</html>

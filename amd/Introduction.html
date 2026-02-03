@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Power Solution Introduction | AMD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            height: 100%;
+            min-width: 1200px;
+            overflow-x: auto; 
+            scroll-behavior: smooth;
+        }
+
+        /* --- 頂部導航欄 --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            height: 75px;
+            background-color: #000;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 25px; }
+        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s;}
+        .back-home:hover { color: #ED1C24; }
+        .amd-logo { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        .nav-right i { font-size: 18px; color: #fff; cursor: pointer; }
+
+        /* --- 內容容器 --- */
+        .main-container {
+            margin-top: 75px;
+            padding: 40px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            padding-bottom: 60px;
+        }
+
+        /* --- 總覽圖區塊 --- */
+        .overview-wrapper {
+            position: relative;
+            width: 100%;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .intro-text {
+            font-size: 1.3rem;
+            color: #444;
+            max-width: 1000px;
+            margin: 40px auto 10px auto;
+            line-height: 1.6;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .click-hint {
+            text-align: center; 
+            color: #999; 
+            margin-top: 15px; 
+            font-size: 0.9rem;
+        }
+
+        .main-diagram {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* --- 熱區 (Hotspots) 修改樣式：完全隱形 --- */
+        .hotspot {
+            position: absolute;
+            /* 已改為透明 */
+            background-color: transparent; 
+            
+            cursor: pointer;
+            display: block;
+            z-index: 10;
+            border-radius: 4px;
+        }
+        
+        /* Hover 時完全透明，無邊框 */
+        .hotspot:hover {
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        /* 熱區位置 */
+        .spot-whip { top: 5%; left: 50%; width: 8%; height: 5%; }
+        .spot-lvdc-shelf { top: 16%; left: 44%; width: 13%; height: 6%; }
+        .spot-vrm { top: 19%; left: 67%; width: 5%; height: 4%; }
+        .spot-lvdc-sidecar { top: 27%; left: 32%; width: 12%; height: 7%; }
+        .spot-busbar { top: 40%; left: 58%; width: 8%; height: 4%; }
+        .spot-hvdc-sidecar { top: 47%; left: 32%; width: 12%; height: 7%; }
+        .spot-hvdc-shelf { top: 59%; left: 55%; width: 12%; height: 7%; }
+        .spot-sst { top: 78%; left: 19%; width: 7%; height: 6%; }
+
+
+        /* --- 詳細區塊共用樣式 --- */
+        .detail-section {
+            scroll-margin-top: 100px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .section-nav {
+            background-color: #fff;
+            padding: 15px 30px;
+            border-bottom: 2px solid #0E4E73;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 紅色邊框標題樣式 */
+        .red-border-title {
+            border: 2px solid #ED1C24;
+            color: #ED1C24;
+            padding: 5px 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: inline-block;
+            background-color: #fff;
+        }
+
+        .back-btn-blue {
+            background-color: #0E4E73; 
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 25px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .back-btn-blue:hover { background-color: #003366; }
+
+        /* --- 產品規格 Grid 佈局 --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            padding: 50px;
+        }
+        
+        /* 單欄佈局容器 */
+        .single-product-container {
+            padding: 50px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        
+        /* 置中佈局容器 (給 Bus Bar / HVDC Sidecar 用) */
+        .center-image-container {
+            padding: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 20px;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            transition: box-shadow 0.2s;
+            background-color: #fff;
+            width: 100%;
+        }
+        
+        .product-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-img {
+            width: 220px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .product-info h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #000;
+        }
+
+        .product-info p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        .product-info strong {
+            color: #000;
+        }
+
+        /* --- 其他大圖樣式 --- */
+        .detail-image-full {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* ✅ 修改：新增縮小版圖片樣式 (針對模糊圖檔) */
+        .detail-image-small {
+            width: 100%;
+            max-width: 600px; /* 限制最大寬度，避免拉伸 */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* 圖片置中 */
+        }
+        
+        .anchor-point {
+            position: relative;
+            top: -100px;
+            visibility: hidden;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-left">
+            <a href="amdsupport.html" class="back-home">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <div style="width: 20px;"></div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
+        </div>
+
+        <div class="nav-right">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-globe"></i>
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <div class="overview-wrapper" id="top">
+            <h1 class="page-title">AI Power Solution Introduction</h1>
+            
+            <div style="position: relative; display: inline-block; width: 100%;">
+                <img src="inc4.svg" alt="System Overview" class="main-diagram">
+
+                <a href="#section-whip" class="hotspot spot-whip" title="Power Whip"></a>
+                <a href="#section-lvdc-shelf" class="hotspot spot-lvdc-shelf" title="LVDC Power Shelf"></a>
+                <a href="#section-vrm" class="hotspot spot-vrm" title="VRM"></a>
+                <a href="#section-lvdc-sidecar" class="hotspot spot-lvdc-sidecar" title="LVDC Sidecar"></a>
+                <a href="#section-busbar" class="hotspot spot-busbar" title="Bus Bar"></a>
+                <a href="#section-hvdc-sidecar" class="hotspot spot-hvdc-sidecar" title="HVDC Sidecar"></a>
+                <a href="#section-hvdc-shelf" class="hotspot spot-hvdc-shelf" title="HVDC Power Shelf"></a>
+                <a href="#section-sst" class="hotspot spot-sst" title="SST"></a>
+            </div>
+
+            <p class="intro-text">
+                AI data center power architectures are shifting toward high-efficiency, high-voltage DC, intelligent, and modular designs to support next-generation AI workloads.
+            </p>
+
+            <p class="click-hint">
+                <i class="fas fa-hand-pointer"></i> Click on the red boxes in the diagram to jump to details.
+            </p>
+        </div>
+
+
+        <div id="section-whip" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">Power Whip</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <div class="single-product-container">
+                <div class="product-item">
+                    <img src="to10.png" alt="Power Whip" class="product-img">
+                    <div class="product-info">
+                        <h3>Power Whip</h3>
+                        <p>3PH/480V/60A<br>3PH/480V/30A</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="section-lvdc-shelf" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">LVDC Power Shelf (BBU, CBU)</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <div class="products-grid">
+                <div class="product-item">
+                    <img src="to1.png" alt="Power Shelf 33KW" class="product-img">
+                    <div class="product-info"><h3>Power Shelf</h3><p>33KW / 50V OCP HPR</p></div>
+                </div>
+                <div class="product-item">
+                    <img src="to2.png" alt="PSU 5500W" class="product-img">
+                    <div class="product-info"><h3>PSU</h3><p>5500W / 50V / 1PH<br>97.5% Eff</p></div>
+                </div>
+                <div class="product-item">
+                    <img src="to3.png" alt="Power Shelf 72KW" class="product-img">
+                    <div class="product-info"><h3>Power Shelf</h3><p>72KW / 50V<br>OCP HPR</p></div>
+                </div>
+                <div class="product-item">
+                    <img src="to4.png" alt="PSU 12kW" class="product-img">
+                    <div class="product-info"><h3>PSU</h3><p>12kW / 50V / 1PH<br>97.5% Eff</p></div>
+                </div>
+                <div class="product-item">
+                    <img src="to5.png" alt="Power Shelf 111KW" class="product-img">
+                    <div class="product-info"><h3>Power Shelf</h3><p>111KW / 54V<br>AMD AI Power</p></div>
+                </div>
+                <div class="product-item">
+                    <img src="to6.png" alt="PSU 18.5kW" class="product-img">
+                    <div class="product-info"><h3>PSU</h3><p>18.5kW / 54V / 3PH<br>97.5% Eff<br>1200J high energy</p></div>
+                </div>
+                <div class="product-item">
+                    <img src="to7.png" alt="BBU Shelf & BBU" class="product-img">
+                    <div class="product-info">
+                        <h3>BBU Shelf & BBU</h3>
+                        <p><strong>BBU Shelf:</strong> 33KW / 50V, 72kW / 50V</p>
+                        <p style="margin-top: 10px;"><strong>BBU:</strong> 5.5KW / 50V, 12kW / 50V</p>
+                    </div>
+                </div>
+                <div class="product-item">
+                    <img src="to8.png" alt="CBU Shelf & CBU" class="product-img">
+                    <div class="product-info">
+                        <h3>CBU Shelf & CBU</h3>
+                        <p><strong>CBU Shelf:</strong> 24KW / 50V</p>
+                        <p style="margin-top: 10px;"><strong>CBU:</strong> 8KW / 50V</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="section-vrm" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">VRM</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <img src="image_placeholder.jpg" alt="VRM Detail" class="detail-image-full">
+        </div>
+
+
+        <div id="section-lvdc-sidecar" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">LVDC Sidecar</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <div class="single-product-container">
+                <div class="product-item">
+                    <img src="to9.png" alt="LVDC Sidecar" class="product-img">
+                    <div class="product-info">
+                        <h3>LVDC Sidecar</h3>
+                        <p>260KW / 50V<br>AMD AI Power</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="section-busbar" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">Bus Bar</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <div class="center-image-container">
+                <img src="to11.png" alt="Bus Bar Detail" class="detail-image-small">
+            </div>
+        </div>
+
+
+        <div id="section-hvdc-sidecar" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">HVDC Sidecar</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <div class="center-image-container">
+                <img src="to12.png" alt="HVDC Sidecar Detail" class="detail-image-small">
+            </div>
+        </div>
+
+
+        <div id="section-hvdc-shelf" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">HVDC Power Shelf (BBU, CBU)</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <div class="single-product-container">
+                <div class="product-item">
+                    <img src="to13.png" alt="HVDC Power Shelf" class="product-img">
+                    <div class="product-info">
+                        <h3>HVDC Power Shelf</h3>
+                        <p>+/-400V Input<br>100KW / 50V<br>AMD AI Power</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="section-sst" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">SST</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <img src="image_placeholder.jpg" alt="SST Detail" class="detail-image-full">
+        </div>
+
+    </div>
+
+</body>
+</html>

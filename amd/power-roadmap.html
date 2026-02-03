@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AMD Power Solution Roadmap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb;
+            color: #333;
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px; 
+            overflow-x: auto; 
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 70px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex-shrink: 0; 
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 24px; width: auto; display: block; } 
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px; 
+        }
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ED1C24; color: #fff; border-color: #ED1C24; }
+
+        /* --- 圖片地圖容器 --- */
+        .map-wrapper {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
+        .map-container {
+            position: relative;
+            width: 1200px;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .main-image {
+            width: 100%;
+            display: block;
+        }
+
+        /* --- 連結熱區 (Hotspots) --- */
+        .hotspot {
+            position: absolute;
+            right: 0.5%;      /* 靠右對齊 */
+            width: 20%;       /* 寬度涵蓋右側文字 */
+            height: 6%;       /* 預設高度 */
+            
+            /* --- ⚠️ 想要檢查位置時，請把 background-color 改成紅色 --- */
+            background-color: transparent; 
+            /* background-color: rgba(255, 0, 0, 0.3); */
+            
+            cursor: pointer;
+            display: block;
+            z-index: 10;
+        }
+
+        /* --- 設定 7 個 Solution 的垂直位置 (Top %) --- */
+        
+        /* Solution 1: 再往上移 (10.5% -> 9.5%) */
+        .link-sol1 { top: 5.5%; }
+
+        /* Solution 2: 再往上移 (20.5% -> 19.5%) */
+        .link-sol2 { top: 19%; }
+
+        /* Solution 3: 維持不變 */
+        .link-sol3 { top: 32.5%; }
+
+        /* Solution 4: 維持不變 */
+        .link-sol4 { top: 54%; }
+
+        /* Solution 5: 維持不變 */
+        .link-sol5 { top: 63%; }
+
+        /* Solution 6: 維持不變 */
+        .link-sol6 { top: 79%; }
+
+        /* Solution 7: 維持不變 (之前已調低) */
+        .link-sol7 { top: 87.5%; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">Power Architecture Roadmap</div>
+        </div>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </header>
+
+    <div class="map-wrapper">
+        <div class="map-container">
+            <img src="power1.svg" alt="AMD Power Solution" class="main-image">
+
+            <a href="page-solution1.html" class="hotspot link-sol1" title="Solution 1"></a>
+            <a href="page-solution2.html" class="hotspot link-sol2" title="Solution 2"></a>
+            <a href="page-solution3.html" class="hotspot link-sol3" title="Solution 3"></a>
+            <a href="page-solution4.html" class="hotspot link-sol4" title="Solution 4"></a>
+            <a href="page-solution5.html" class="hotspot link-sol5" title="Solution 5"></a>
+            <a href="page-solution6.html" class="hotspot link-sol6" title="Solution 6"></a>
+            <a href="page-solution7.html" class="hotspot link-sol7" title="Solution 7"></a>
+        </div>
+    </div>
+
+</body>
+</html>

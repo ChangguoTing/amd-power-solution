@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solution 5: HVDC Sidecar + HVDC IT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb; 
+            color: #333; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px; 
+            overflow-x: auto; 
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-shrink: 0; 
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 26px; width: auto; display: block; }
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
+        }
+        
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+        /* --- 主佈局 --- */
+        .container { 
+            display: flex; flex: 1; padding: 20px; gap: 20px; overflow: hidden; 
+            max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; 
+        }
+
+        /* 左側欄 (Inputs) */
+        .sidebar { 
+            width: 45%; 
+            background: #ffffff; 
+            border: 1px solid #e5e7eb; border-radius: 6px;
+            padding: 20px; 
+            overflow-y: auto; 
+            display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        /* 右側欄 (Results) */
+        .main { 
+            width: 55%; 
+            background: #ffffff; 
+            border: 1px solid #e5e7eb; border-radius: 6px;
+            padding: 20px; 
+            overflow-y: auto; 
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        /* 群組標題 */
+        .group-title { 
+            background: #f3f4f6; 
+            color: #111827; 
+            padding: 10px 15px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            border-radius: 4px; 
+            display: flex; justify-content: flex-start; align-items: center;
+            border-left: 4px solid #ED1C24; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        
+        .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 12px; color: #4b5563; }
+        .input-row label { flex: 1; font-weight: 600; }
+        
+        select, input[type="text"] { 
+            flex: 1.2; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 4px; 
+            font-size: 13px; background: #fff; color: #374151; outline: none; 
+        }
+
+        /* Range Slider */
+        .slider-container { flex: 1.2; display: flex; align-items: center; gap: 10px; }
+        input[type="range"] {
+            flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none;
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none; width: 18px; height: 18px; background: #ED1C24; border: 2px solid #fff;
+            border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        .slider-val { font-weight: 700; color: #ED1C24; font-family: monospace; font-size: 14px; width: 60px; text-align: right; }
+        
+        /* Rack Frame Toggle */
+        .toggle-group { flex: 1.2; display: flex; gap: 5px; }
+        .toggle-opt {
+            flex: 1; text-align: center; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;
+            background: #fff; transition: all 0.2s;
+        }
+        .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
+
+        /* Architecture Diagram Container (UPDATED) */
+        .arch-diagram{
+            border: 1px dashed #ccc;
+            background: #fafafa;
+            border-radius: 6px;
+
+            /* 空白少一點 */
+            height: 45vh;
+            min-height: 420px;
+
+            /* 置中 */
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            /* 不要貼邊但也不要浪費 */
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .arch-diagram svg{
+            width: 100%;
+            height: 100%;
+            display:block;
+        }
+
+        /* --- Result Items --- */
+        .result-header {
+            font-size: 18px; font-weight: 700; color: #4CAF50; 
+            margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;
+        }
+
+        .result-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 15px; padding: 10px; border: 1px solid #f0f0f0; border-radius: 6px;
+            background: #fff; transition: transform 0.2s;
+        }
+        .result-row:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        .res-label-box {
+            background-color: #8BC34A; color: #fff; padding: 5px 15px; font-weight: 700; font-size: 13px; border-radius: 4px;
+            width: 120px; text-align: center;
+        }
+        .res-img-box {
+            width: 100px; height: 60px; display: flex; align-items: center; justify-content: center;
+            background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; overflow: hidden; 
+        }
+        .res-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        
+        .res-qty-box { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .qty-title { font-size: 11px; font-weight: 700; color: #004d70; }
+        .qty-val {
+            background: #004d70; color: #fff; width: 60px; padding: 5px; text-align: center;
+            font-weight: 700; font-size: 14px; border-radius: 4px;
+        }
+
+        /* BOM Button */
+        .bom-btn {
+            position: absolute; bottom: 20px; right: 20px;
+            background-color: #8BC34A; color: #fff; padding: 12px 25px;
+            font-size: 15px; font-weight: 700; border: none; border-radius: 6px;
+            cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; 
+        }
+        .bom-btn:hover { background-color: #7cb342; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">Solution 5: HVDC Sidecar + HVDC IT</div>
+        </div>
+        <a href="page-orv3.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Map</a>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            
+            <div class="group-title">General Information <i class="far fa-question-circle" style="margin-left: auto;"></i></div>
+            
+            <div class="input-row">
+                <label>Location</label>
+                <select id="location">
+                    <option>United States</option>
+                    <option>Taiwan</option>
+                </select>
+            </div>
+            
+            <div class="input-row">
+                <label>IT Capacity (kW)</label>
+                <div class="slider-container">
+                    <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
+                    <span class="slider-val" id="cap_display">200</span>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <label>Power Redundancy</label>
+                <select>
+                    <option>N</option>
+                    <option>N+1</option>
+                    <option>2N</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>Rack Frame</label>
+                <div class="toggle-group">
+                    <div class="toggle-opt" id="btn-21" onclick="setRack(21)">21 inch</div>
+                    <div class="toggle-opt active" id="btn-42" onclick="setRack(42)">42 inch</div>
+                </div>
+            </div>
+
+            <div class="group-title">Power Device</div>
+            
+            <div class="input-row">
+                <label>Power Shelf</label>
+                <select id="power_shelf" onchange="calc()">
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>BBU</label>
+                <select id="bbu_select" onchange="calc()">
+                    <option value="0">N.A</option>
+                    <option value="72_LFP">2U 72KW LFP</option>
+                    <option value="72_LTO">2U 72KW LTO</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>CBU</label>
+                <select id="cbu_select" onchange="calc()">
+                    <option value="0">N.A</option>
+                    <option value="24">1U 24KW</option>
+                </select>
+            </div>
+
+            <div class="group-title">
+                IT Power Architecture
+            </div>
+            <div class="arch-diagram" id="arch_display">
+            </div>
+
+        </div>
+
+        <div class="main">
+            <div class="result-header">Results</div>
+
+            <div class="result-row">
+                <div class="res-label-box">Power Whip</div>
+                <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">Power Shelf</div>
+                <div class="res-img-box"><img src="shelf.png" alt="Power Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">BBU Shelf</div>
+                <div class="res-img-box"><img src="shelf.png" alt="BBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bbu">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">CBU Shelf</div>
+                <div class="res-img-box"><img src="shelf.png" alt="CBU Shelf"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_cbu">--</div></div>
+            </div>
+
+            <div class="result-row">
+                <div class="res-label-box">Rack Bus Bar</div>
+                <div class="res-img-box"><img src="rack.png" alt="Rack Bus Bar"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bus">--</div></div>
+            </div>
+
+            <a href="bom1.html" class="bom-btn">
+                <i class="fas fa-file-download"></i> BOM Generator
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let currentRack = 42;
+
+        function init() {
+            setRack(42);
+        }
+
+        function updateCapDisplay() {
+            const val = document.getElementById('it_capacity').value;
+            document.getElementById('cap_display').innerText = val;
+        }
+
+        function setRack(size) {
+            currentRack = size;
+            
+            document.getElementById('btn-21').classList.remove('active');
+            document.getElementById('btn-42').classList.remove('active');
+            document.getElementById(`btn-${size}`).classList.add('active');
+
+            drawArch(size);
+
+            const shelfSelect = document.getElementById('power_shelf');
+            shelfSelect.innerHTML = ''; 
+
+            if (size === 42) {
+                let opt1 = new Option("42 inch true 3Phase 74KW", "74");
+                let opt2 = new Option("N.A", "0");
+                shelfSelect.add(opt1);
+                shelfSelect.add(opt2);
+            } else {
+                let opt1 = new Option("21 inch 72KW", "72");
+                let opt2 = new Option("N.A", "0");
+                shelfSelect.add(opt1);
+                shelfSelect.add(opt2);
+            }
+
+            calc(); 
+        }
+
+        // UPDATED: drawArch() - centered, scaled, less whitespace, centered text
+        function drawArch(size) {
+            const container = document.getElementById('arch_display');
+
+            const colorSidecar = "#558B2F";
+            const colorRedBox  = "#FF0000";
+            const colorRedText = "#FF0000";
+            const colorBlack   = "#000000";
+            const colorPSU     = "#81D4FA";
+            const colorRedBus  = "#FF0000";
+
+            // Smaller viewBox to reduce whitespace
+            const vbW = (size === 21) ? 480 : 540;
+            const vbH = 240;
+
+            // Uniform scale for the whole diagram
+            const scale = 0.92;
+
+            // Estimated content bounds (before scaling)
+            const contentW = (size === 21) ? 430 : 490;
+            const contentH = 210;
+
+            // Centering translation after scaling
+            const tx = (vbW - contentW * scale) / 2;
+            const ty = (vbH - contentH * scale) / 2;
+
+            // Helpful centers for text alignment
+            const leftCenterX = 120;
+            const cableCenterX = 235;
+
+            const rackX = 280;
+            const rackW = (size === 21) ? 110 : 170;
+            const rackCenterX = rackX + rackW / 2;
+
+            const sidecarSVG = `
+                <!-- Title text centered -->
+                <text x="${leftCenterX}" y="28" font-family="Arial" font-size="20" font-weight="bold"
+                      fill="${colorRedText}" text-anchor="middle">
+                    1. 800V sidecar(P+B+C)
+                </text>
+                <text x="${leftCenterX}" y="54" font-family="Arial" font-size="20" font-weight="bold"
+                      fill="${colorRedText}" text-anchor="middle">
+                    2. +/-400V sidecar
+                </text>
+
+                <line x1="10" y1="92" x2="40" y2="92" stroke="#E040FB" stroke-width="4"/>
+
+                <rect x="40" y="66" width="150" height="78" fill="${colorSidecar}" stroke="none"/>
+
+                <rect x="52" y="80" width="52" height="52" fill="none" stroke="white" stroke-width="2"/>
+                <path d="M 52 132 L 104 80" stroke="white" stroke-width="2"/>
+                <rect x="58" y="86" width="40" height="40" fill="#90A4AE" opacity="0.5"/>
+
+                <line x1="104" y1="106" x2="120" y2="106" stroke="white" stroke-width="2"/>
+
+                <rect x="120" y="80" width="52" height="52" fill="${colorRedBox}" stroke="white" stroke-width="2"/>
+                <line x1="120" y1="132" x2="172" y2="80" stroke="white" stroke-width="2"/>
+
+                <line x1="190" y1="106" x2="${rackX}" y2="106" stroke="gray" stroke-width="4"/>
+
+                <!-- HVDC Cable label centered -->
+                <text x="${cableCenterX}" y="95" font-family="Arial" font-size="12"
+                      fill="#33691E" text-anchor="middle">
+                    HVDC Cable
+                </text>
+            `;
+
+            const rackSVG = `
+                <rect x="${rackX}" y="30" width="${rackW}" height="200" fill="none"
+                      stroke="${colorBlack}" stroke-width="3"/>
+
+                <text x="${rackCenterX}" y="55" font-family="Arial" font-size="16" font-weight="bold"
+                      fill="${colorRedText}" text-anchor="middle">800V</text>
+
+                <rect x="${rackX + 2}" y="70" width="${rackW - 4}" height="52"
+                      fill="${colorPSU}" stroke="${colorBlack}" stroke-width="1"/>
+
+                <text x="${rackCenterX}" y="102" font-family="Arial" font-size="14"
+                      fill="black" text-anchor="middle">PSU</text>
+
+                <rect x="${rackCenterX - 5}" y="122" width="10" height="108"
+                      fill="${colorRedBus}" stroke="none"/>
+
+                <text x="${rackCenterX}" y="172" font-family="Arial" font-size="18"
+                      fill="${colorBlack}" font-weight="bold" text-anchor="middle">HVDC</text>
+            `;
+
+            const svgContent = `
+                <svg viewBox="0 0 ${vbW} ${vbH}" preserveAspectRatio="xMidYMid meet"
+                     xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    <g transform="translate(${tx}, ${ty}) scale(${scale})">
+                        ${sidecarSVG}
+                        ${rackSVG}
+                    </g>
+                </svg>
+            `;
+
+            container.innerHTML = svgContent;
+        }
+
+        function calc() {
+            const cap = parseInt(document.getElementById('it_capacity').value) || 0;
+            const shelfPower = parseInt(document.getElementById('power_shelf').value);
+            const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
+            const bbuVal = document.getElementById('bbu_select').value;
+            let bbuPower = 0;
+            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") { bbuPower = 72; }
+            const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
+            const cbuVal = parseInt(document.getElementById('cbu_select').value);
+            const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
+            const accessoryQty = shelfQty > 0 ? shelfQty : 0;
+
+            document.getElementById('qty_shelf').innerText = shelfQty;
+            document.getElementById('qty_bbu').innerText = bbuQty;
+            document.getElementById('qty_cbu').innerText = cbuQty;
+            document.getElementById('qty_whip').innerText = accessoryQty;
+            document.getElementById('qty_bus').innerText = accessoryQty;
+        }
+
+        init();
+    </script>
+</body>
+</html>

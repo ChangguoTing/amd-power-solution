@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AMD Capital Cost Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f9fafb; 
+            color: #374151; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px;
+            overflow-x: auto; 
+        }
+        
+        /* Header */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 25px; 
+            height: 60px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            flex-shrink: 0; 
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 24px; width: auto; display: block; }
+        .title { 
+            font-size: 16px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #e5e7eb; padding-left: 15px;
+        }
+        
+        /* Layout */
+        .container { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 60px); }
+        
+        /* Sidebar */
+        .sidebar { 
+            width: 460px; 
+            background: #ffffff; 
+            border-right: 1px solid #e5e7eb; 
+            padding: 25px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px;
+            flex-shrink: 0; 
+        }
+
+        /* Group Titles */
+        .group-title { 
+            background: #f3f4f6; 
+            color: #111827; 
+            padding: 10px 15px; 
+            font-size: 13px; 
+            font-weight: 700; 
+            border-radius: 4px; 
+            display: flex; 
+            justify-content: space-between; 
+            border-left: 4px solid #ED1C24; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Input Rows */
+        .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 5px; color: #4b5563; }
+        .input-row label { flex: 1; font-weight: 600; margin-right: 10px; }
+        
+        /* Global Select Inputs (Sidebar) */
+        select { 
+            flex: 1.3; 
+            padding: 8px 10px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 4px; 
+            font-size: 13px; 
+            background: #fff; 
+            color: #374151;
+            outline: none;
+            cursor: pointer;
+        }
+        select:hover { border-color: #9ca3af; }
+        select:disabled { background: #f3f4f6; color: #bbb; cursor: not-allowed; border-color: #e5e7eb; }
+        
+        /* --- 圖片容器樣式 (強制調整) --- */
+        .img-placeholder {
+            width: 100%;
+            
+            /* 使用 min-height 強制撐開高度 */
+            min-height: 250px; 
+            height: 250px; 
+            
+            background-color: #fff; 
+            border: 1px solid #e5e7eb; 
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 5px; /* 稍微留一點點邊距 */
+            box-sizing: border-box;
+            
+            /* 防止被 flex 容器壓縮 */
+            flex-shrink: 0;
+        }
+        
+        /* 圖片樣式：強制填滿 */
+        .img-placeholder img {
+            /* 讓圖片寬度佔滿容器 */
+            width: 100%;
+            height: auto;
+            
+            /* 移除原本的 contain，改用 block 讓它自然撐開 */
+            /* 如果圖片比例跟容器不合，可能會留白，但至少圖片會變大 */
+            display: block;
+            
+            /* 如果您希望圖片強制拉伸填滿（可能會變形），可以把下面這行取消註解 */
+            /* height: 100%; width: 100%; object-fit: fill; */
+        }
+
+        /* Sliders */
+        .slider-wrapper { flex: 1.5; display: flex; align-items: center; gap: 10px; }
+        input[type="range"] {
+            flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none; -webkit-appearance: none; appearance: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 16px; height: 16px; background: #000; border-radius: 50%; border: 2px solid #fff; cursor: pointer; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); background: #ED1C24; }
+
+        .val-box { font-weight: 700; width: 75px; text-align: right; font-size: 13px; color: #ED1C24; font-family: monospace; }
+
+        /* Redundancy Grid */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 80px 1fr 1fr 1fr; 
+            gap: 6px; 
+            background: #ffffff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;
+            font-size: 11px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .grid-head { font-weight: 700; color: #ED1C24; font-size: 11px; text-transform: uppercase; }
+        .grid-row-label { text-align: left; font-weight: 700; align-self: center; color: #374151; }
+        .tiny-select { width: 100%; padding: 3px; font-size: 11px; background: #f9fafb; color: #374151; border: 1px solid #d1d5db; border-radius: 2px; }
+
+        /* Checkbox Grid */
+        .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; color: #4b5563; }
+        .check-item { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; }
+        input[type="checkbox"] {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 3px;
+        }
+        input[type="checkbox"]:checked { background: #ED1C24; border-color: #ED1C24; }
+        input[type="checkbox"]:checked::after { content: '✓'; color: white; font-size: 14px; font-weight: bold; }
+
+        /* Main Content */
+        .main { flex: 1; background: #f9fafb; padding: 40px; overflow-y: auto; }
+        .res-header { color: #111827; font-size: 20px; margin-bottom: 25px; font-weight: 700; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        
+        .section-bar { 
+            background: #ffffff; 
+            border: 1px solid #e5e7eb;
+            color: #111827; 
+            padding: 10px 15px; 
+            font-size: 13px; font-weight: 700; margin-bottom: 15px; border-radius: 4px; 
+            display: flex; justify-content: space-between; border-left: 4px solid #ED1C24;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            align-items: center;
+        }
+        
+        .header-select-wrapper { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .header-select {
+            background: transparent; border: none; color: #111; font-weight: bold; font-size: 13px; cursor: pointer;
+            width: auto; flex: none; text-align: right; appearance: none; -webkit-appearance: none;
+        }
+        
+        .summary-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 40px; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .summary-table td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; color: #4b5563; }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .res-val { text-align: right; font-weight: 700; color: #111827; font-family: monospace; font-size: 15px; }
+
+        .chart-row { 
+            display: flex; align-items: center; height: 300px; margin-bottom: 30px; 
+            background: #ffffff; padding: 20px; border-radius: 6px; border: 1px solid #e5e7eb; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .chart-container { width: 250px; height: 250px; }
+        .legend { margin-left: 40px; font-size: 12px; display: flex; flex-direction: column; gap: 8px; color: #4b5563; }
+        .legend div { display: flex; align-items: center; gap: 10px; }
+        .dot { width: 12px; height: 12px; display: inline-block; border-radius: 2px; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f9fafb; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+        </div>
+        <div class="title">Power Solution Cost Calculator</div>
+        <div><i class="fas fa-server" style="color: #9ca3af; font-size: 18px;"></i></div>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            
+            <div class="group-title">Data Center Environment</div>
+            
+            <div class="input-row">
+                <label>Power distribution type</label>
+                <select id="input_pwr_dist" onchange="checkLogic(); updateImage()">
+                    <option value="1">Traditional AC + LVDC IT</option>
+                    <option value="2">Traditional AC + HVDC IT</option>
+                    <option value="3">LVDC Sidecar + LVDC IT</option>
+                    <option value="4">HVDC Sidecar + LVDC IT</option>
+                    <option value="5">HVDC Sidecar + HVDC IT</option>
+                    <option value="6">800V SST + LVDC IT</option>
+                    <option value="7">800V SST + HVDC IT</option>
+                </select>
+            </div>
+
+            <div class="img-placeholder" id="arch_img_area">
+                </div>
+
+            <div class="input-row">
+                <label>Backup Solution</label>
+                <select id="input_backup" onchange="checkLogic();">
+                    <option value="1">UPS Solution</option>
+                    <option value="2">NMC/LFP BBU Solution</option>
+                    <option value="3">LTO BBU Solution (with Peak Shaving)</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>Data Center Design Capacity</label>
+                <select id="capacity" onchange="calc()">
+                    <option value="500">500 kW</option>
+                    <option value="1000" selected>1000 kW</option>
+                    <option value="2000">2000 kW</option>
+                    <option value="5000">5000 kW</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>Peak Shaving Solution</label>
+                <select id="input_peak" onchange="checkLogic()">
+                    <option value="1">High energy Power Solution</option>
+                    <option value="2">EDLC CBU</option>
+                    <option value="3">Li-Cap CBU</option>
+                    <option value="4">LTO BBU Solution (with BBU)</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label>Power Density</label>
+                <div class="slider-wrapper">
+                    <input type="range" id="density" min="100" max="1000" step="100" value="100" oninput="calc()">
+                    <div class="val-box" id="disp_density">100 kW</div>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <label>Labor Rate</label>
+                <div class="slider-wrapper">
+                    <input type="range" id="labor" min="20" max="200" step="10" value="90" oninput="calc()">
+                    <div class="val-box" id="disp_labor">$ 90 /hr</div>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <label>Core & Shell</label>
+                <div class="slider-wrapper">
+                    <input type="range" id="shell" min="50" max="300" step="10" value="90" oninput="calc()">
+                    <div class="val-box" id="disp_shell">$ 90 /ft²</div>
+                </div>
+            </div>
+
+            <div class="group-title">Redundancy Level</div>
+            <div class="grid-container">
+                <div></div>
+                <div class="grid-head">IT Dist</div>
+                <div class="grid-head">UPS</div>
+                <div class="grid-head">SST</div>
+                
+                <div class="grid-row-label">Power</div>
+                <select class="tiny-select" id="red_it" onchange="calc()">
+                    <option value="1">N</option>
+                    <option value="1.1">N+1</option>
+                </select>
+                <select class="tiny-select" id="red_ups" onchange="calc()">
+                    <option value="1">N</option>
+                    <option value="1.1">N+1</option>
+                    <option value="1.8">2N</option>
+                </select>
+                <select class="tiny-select" id="red_sst" onchange="calc()">
+                    <option value="1">N</option>
+                    <option value="1.1">N+1</option>
+                    <option value="1.8">2N</option>
+                </select>
+            </div>
+
+            <div class="group-title">Include in Cost</div>
+            <div class="check-grid">
+                <label class="check-item"><input type="checkbox" id="cb_ups" checked onchange="calc()"> UPS/SST</label>
+                <label class="check-item"><input type="checkbox" id="cb_cbu" checked onchange="calc()"> CBU</label>
+                
+                <label class="check-item"><input type="checkbox" id="cb_psu" checked onchange="calc()"> PSU</label>
+                <label class="check-item"><input type="checkbox" id="cb_bus" checked onchange="calc()"> IT Bus Bar</label>
+                
+                <label class="check-item"><input type="checkbox" id="cb_bbu" checked onchange="calc()"> BBU</label>
+                <label class="check-item"><input type="checkbox" id="cb_busway" checked onchange="calc()"> BusWay</label>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="res-header">RESULTS</div>
+
+            <div class="section-bar">
+                <span>Capital Cost Summary</span>
+                <div class="header-select-wrapper">
+                    <select class="header-select">
+                        <option>Local Currency</option>
+                        <option>USD ($)</option>
+                    </select>
+                    <i class="fas fa-chevron-down" style="font-size:10px; color:#111;"></i>
+                </div>
+            </div>
+            <table class="summary-table">
+                <tr><td>Data Center Cost</td><td class="res-val" id="out_total">$ 7.2 M</td></tr>
+                <tr><td>Data Center Cost Per Watt</td><td class="res-val" id="out_per_watt">$ 7.19</td></tr>
+                <tr><td>Calculated Rack Quantity</td><td class="res-val" id="out_racks">250</td></tr>
+                <tr><td>IT Room Area</td><td class="res-val" id="out_it_area">8,125 ft²</td></tr>
+                <tr><td>Facility Area</td><td class="res-val" id="out_fac_area">13,195 ft²</td></tr>
+            </table>
+
+            <div class="section-bar">Cost Breakdown (Equipment)</div>
+            <div class="chart-row">
+                <div class="chart-container"><canvas id="chartType"></canvas></div>
+                <div class="legend">
+                    <div><span class="dot" style="background:#ED1C24"></span> UPS/SST</div>
+                    <div><span class="dot" style="background:#4b5563"></span> PSU</div>
+                    <div><span class="dot" style="background:#6b7280"></span> BBU</div>
+                    <div><span class="dot" style="background:#9ca3af"></span> CBU</div>
+                    <div><span class="dot" style="background:#0b4f6c"></span> IT Bus Bar</div>
+                    <div><span class="dot" style="background:#d1d5db"></span> BusWay</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 圖片切換邏輯 (所有選項 1-7 都改為讀取 SVG 圖檔) ---
+        function updateImage() {
+            // 取得選單的值 (1 到 7)
+            const pwrDist = document.getElementById('input_pwr_dist').value;
+            const container = document.getElementById('arch_img_area');
+            
+            // 直接根據值組合檔名 (tool1.svg, tool2.svg, ..., tool7.svg)
+            // 請確認您的資料夾內有這些檔案
+            const fileName = `tool${pwrDist}.svg`;
+            
+            // 更新 HTML，設定圖片路徑與替代文字
+            // 加入 onerror 屬性，萬一找不到圖片時會顯示文字提示
+            container.innerHTML = `<img src="${fileName}" alt="Solution ${pwrDist} Diagram" onerror="this.style.display='none'; this.parentNode.innerHTML='Image not found: ${fileName}'">`;
+        }
+
+        // --- Input Logic Management ---
+        function checkLogic() {
+            const pwrDist = document.getElementById('input_pwr_dist');
+            const backup = document.getElementById('input_backup');
+            const peak = document.getElementById('input_peak');
+            
+            const upsOption = backup.querySelector('option[value="1"]');
+
+            // Reset States
+            backup.disabled = false;
+            peak.disabled = false;
+            upsOption.disabled = false; 
+            
+            // Logic 1: SST vs UPS (Option 6 & 7)
+            if (pwrDist.value === "6" || pwrDist.value === "7") {
+                upsOption.disabled = true;
+                if (backup.value === "1") {
+                    backup.value = "2"; 
+                }
+            }
+
+            // Logic 2: Input 2 locks Input 3
+            if (backup.value === "3") {
+                peak.disabled = true;
+                peak.value = ""; 
+            }
+
+            // Logic 3: Input 3 locks Input 2
+            if (!peak.disabled && peak.value === "4") {
+                backup.disabled = true;
+                backup.value = "";
+            }
+            
+            calc(); 
+        }
+
+        // --- Initialize Charts ---
+        const configPie = {
+            type: 'doughnut',
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { legend: { display: false } }, 
+                cutout: '60%',
+                borderWidth: 0
+            }
+        };
+        
+        const chartType = new Chart(document.getElementById('chartType'), {
+            ...configPie,
+            data: {
+                labels: ['UPS/SST', 'PSU', 'BBU', 'CBU', 'IT Bus Bar', 'BusWay'],
+                datasets: [{ 
+                    data: [0, 0, 0, 0, 0, 0], 
+                    backgroundColor: [
+                        '#ED1C24', // UPS/SST
+                        '#4b5563', // PSU
+                        '#6b7280', // BBU
+                        '#9ca3af', // CBU
+                        '#0b4f6c', // IT Bus Bar
+                        '#d1d5db'  // BusWay
+                    ], 
+                    borderWidth: 0 
+                }]
+            }
+        });
+
+        // --- Core Calculation Logic ---
+        function calc() {
+            let cap = parseInt(document.getElementById('capacity').value);
+            let density = parseInt(document.getElementById('density').value);
+            let labor = parseInt(document.getElementById('labor').value);
+            let shellPrice = parseInt(document.getElementById('shell').value);
+            
+            let red_it = parseFloat(document.getElementById('red_it').value);
+            let red_ups = parseFloat(document.getElementById('red_ups').value);
+            let red_sst = parseFloat(document.getElementById('red_sst').value);
+
+            document.getElementById('disp_density').innerText = density + " kW";
+            document.getElementById('disp_labor').innerText = "$ " + labor + " /hr";
+            document.getElementById('disp_shell').innerText = "$ " + shellPrice + " /ft²";
+
+            let racks = Math.ceil(cap / density);
+            if (racks < 1) racks = 1;
+
+            let itArea = racks * 30; 
+            let facArea = Math.round(itArea * 1.7); 
+
+            // Base Load
+            const baseCostPerKW = 2500; 
+            const totalLoadCost = cap * baseCostPerKW;
+
+            // --- Individual Component Costs ---
+            let c_ups = 0, c_psu = 0, c_bbu = 0, c_cbu = 0, c_itbus = 0, c_busway = 0;
+
+            const pwrType = document.getElementById('input_pwr_dist').value;
+            let redundancy = red_ups;
+            if (pwrType === "6" || pwrType === "7") redundancy = red_sst; 
+
+            if(document.getElementById('cb_ups').checked) { c_ups = totalLoadCost * 0.35 * redundancy; }
+            if(document.getElementById('cb_psu').checked) { c_psu = totalLoadCost * 0.15 * red_it; }
+            if(document.getElementById('cb_bbu').checked) { c_bbu = totalLoadCost * 0.12; }
+            if(document.getElementById('cb_cbu').checked) { c_cbu = totalLoadCost * 0.08; }
+            if(document.getElementById('cb_bus').checked) { c_itbus = totalLoadCost * 0.05 * red_it; }
+            if(document.getElementById('cb_busway').checked) { c_busway = totalLoadCost * 0.10 * redundancy; }
+
+            // Other Costs
+            let laborCost = (c_ups + c_psu + c_bbu + c_cbu + c_itbus + c_busway) * (labor / 100) * 0.4;
+            let shellCost = facArea * shellPrice;
+            let miscCost = (c_ups + c_psu) * 0.2; 
+
+            let totalCost = c_ups + c_psu + c_bbu + c_cbu + c_itbus + c_busway + laborCost + shellCost + miscCost;
+            let costPerWatt = totalCost / (cap * 1000);
+
+            // Update DOM
+            document.getElementById('out_total').innerText = "$ " + (totalCost / 1000000).toFixed(1) + " M";
+            document.getElementById('out_per_watt').innerText = "$ " + costPerWatt.toFixed(2);
+            document.getElementById('out_racks').innerText = racks.toLocaleString();
+            document.getElementById('out_it_area').innerText = itArea.toLocaleString() + " ft²";
+            document.getElementById('out_fac_area').innerText = facArea.toLocaleString() + " ft²";
+
+            // Update Chart 
+            chartType.data.datasets[0].data = [
+                Math.round(c_ups), 
+                Math.round(c_psu), 
+                Math.round(c_bbu), 
+                Math.round(c_cbu), 
+                Math.round(c_itbus), 
+                Math.round(c_busway)
+            ];
+            chartType.update();
+        }
+
+        // Initialize Logic and Images
+        checkLogic();
+        updateImage();
+    </script>
+</body>
+</html>

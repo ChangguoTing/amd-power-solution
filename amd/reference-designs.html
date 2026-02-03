@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Center Reference Designs | AMD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            height: 100%;
+            min-width: 1200px;
+            overflow-x: auto; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- 頂部導航欄 --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            height: 75px;
+            background-color: #000;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 25px; }
+        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s;}
+        .back-home:hover { color: #ED1C24; }
+        .amd-logo { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        .nav-right i { font-size: 18px; color: #fff; cursor: pointer; }
+
+        /* --- Hero Section (深色背景) --- */
+        .ref-hero {
+            background-color: #000;
+            color: #fff;
+            padding: 140px 20px 80px 20px;
+            text-align: center;
+            background-image: linear-gradient(to bottom, #000000, #1a1a1a);
+            border-bottom: 4px solid #ED1C24; 
+            flex-shrink: 0;
+        }
+
+        .ref-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            letter-spacing: 1px;
+        }
+
+        .ref-hero p {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: #ccc;
+            margin: 0;
+        }
+
+        /* --- 內容區域 --- */
+        .content-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* 靠左對齊 */
+        }
+
+        /* 合作夥伴 Logo 列 */
+        .partner-logos-row {
+            display: flex;
+            gap: 60px; /* 稍微加大間距 */
+            align-items: center;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .partner-logo-img {
+            /* ✅ 修改：加大高度至 85px */
+            height: 130px; 
+            width: auto;
+            opacity: 1; 
+            transition: all 0.3s;
+        }
+        
+        .partner-logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 下載按鈕群組 */
+        .downloads-group {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* 單個下載項目 */
+        .download-item {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            group: dl;
+        }
+
+        /* 藍色按鈕本體 */
+        .dl-btn-rect {
+            background-color: #0E4E73; /* 深藍色 */
+            color: #fff;
+            width: 280px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 500;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* PDF 圖示與文字區 */
+        .dl-icon-area {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            transition: transform 0.2s ease;
+        }
+
+        .dl-icon-area i {
+            font-size: 32px;
+            color: #ED1C24; /* Adobe PDF Red */
+            margin-bottom: 5px;
+        }
+
+        .dl-text {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Hover 效果 */
+        .download-item:hover .dl-btn-rect {
+            background-color: #003366;
+            transform: translateX(5px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+        }
+        
+        .download-item:hover .dl-icon-area {
+            transform: translateX(5px);
+        }
+
+        /* --- 頁尾 (AMD Footer Style) --- */
+        footer {
+            background-color: #000;
+            color: #fff;
+            padding: 60px 40px 20px 40px;
+            border-top: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .footer-top {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            border-bottom: 1px solid #333;
+            padding-bottom: 40px; margin-bottom: 40px;
+        }
+
+        .subscribe-box {
+            background: linear-gradient(90deg, #1f1f1f, #000);
+            padding: 20px 30px;
+            border: 1px solid #333;
+            display: inline-block;
+        }
+        .subscribe-text { font-size: 16px; font-weight: 600; color: #fff; }
+
+        .social-icons { display: flex; gap: 20px; }
+        .social-icons a { color: #fff; font-size: 20px; transition: color 0.2s; }
+        .social-icons a:hover { color: #ED1C24; }
+
+        .footer-links {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            gap: 40px; margin-bottom: 60px;
+        }
+
+        .col-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #fff; }
+        .col-list { list-style: none; padding: 0; margin: 0; }
+        .col-list li { margin-bottom: 10px; }
+        .col-list a { color: #999; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+        .col-list a:hover { color: #fff; text-decoration: underline; }
+
+        .footer-bottom {
+            max-width: 1200px; margin: 0 auto;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px;
+        }
+        .legal-links { display: flex; gap: 15px; flex-wrap: wrap; }
+        .legal-links a { color: #666; text-decoration: none; font-size: 12px; }
+        .legal-links a:hover { color: #999; }
+
+        .feedback-btn {
+            position: fixed; right: 0; top: 50%; transform: translateY(-50%) rotate(-90deg) translateX(50%);
+            transform-origin: right bottom;
+            background: #666; color: #fff; padding: 10px 20px;
+            font-size: 14px; cursor: pointer; z-index: 999;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-left">
+            <a href="index.html" class="back-home">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+            <div style="width: 20px;"></div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
+        </div>
+
+        <div class="nav-right">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-globe"></i>
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div class="ref-hero">
+        <h1>AMD Data Center Reference Design</h1>
+        <p>Optimized AI data center design. Accelerated AMD AI deployment.</p>
+    </div>
+
+    <div class="content-container">
+        
+        <div class="partner-logos-row">
+            <img src="logo10.png" alt="Schneider Electric" class="partner-logo-img">
+            <img src="logo7.png" alt="Vertiv" class="partner-logo-img">
+            <img src="logo1.png" alt="Delta" class="partner-logo-img">
+            <img src="logo11.png" alt="Uptime Institute" class="partner-logo-img">
+        </div>
+
+        <div class="downloads-group">
+            
+            <a href="MI4.pdf" download class="download-item">
+                <div class="dl-btn-rect">
+                    MI4xx Helios
+                </div>
+                <div class="dl-icon-area">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="dl-text">Adobe Acrobat<br>Document</span>
+                </div>
+            </a>
+
+            <a href="MI5.pdf" download class="download-item">
+                <div class="dl-btn-rect">
+                    MI5xx Arcadia
+                </div>
+                <div class="dl-icon-area">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="dl-text">Adobe Acrobat<br>Document</span>
+                </div>
+            </a>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-top">
+            <div class="subscribe-box">
+                <div class="subscribe-text">Subscribe to the latest news<br>from AMD</div>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fas fa-times"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <div>
+                <div class="col-title">Company</div>
+                <ul class="col-list">
+                    <li><a href="#">About AMD</a></li>
+                    <li><a href="#">Management Team</a></li>
+                    <li><a href="#">Corporate Responsibility</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">News & Events</div>
+                <ul class="col-list">
+                    <li><a href="#">Newsroom</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">Media Library</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">Resources</div>
+                <ul class="col-list">
+                    <li><a href="#">Developer Central</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Webinars</a></li>
+                    <li><a href="#">Explore Resources</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">Partners</div>
+                <ul class="col-list">
+                    <li><a href="#">AMD Partner Hub</a></li>
+                    <li><a href="#">Authorized Distributors</a></li>
+                    <li><a href="#">AMD University Program</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-title">Investors</div>
+                <ul class="col-list">
+                    <li><a href="#">Investor Relations</a></li>
+                    <li><a href="#">Financial Information</a></li>
+                    <li><a href="#">Board of Directors</a></li>
+                    <li><a href="#">Governance Documents</a></li>
+                    <li><a href="#">SEC Filings</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="legal-links">
+                <a href="#">Terms and Conditions</a>
+                <a href="#">Privacy</a>
+                <a href="#">Trademarks</a>
+                <a href="#">Supply Chain Transparency</a>
+                <a href="#">Fair & Open Competition</a>
+                <a href="#">UK Tax Strategy</a>
+                <a href="#">Cookies Policy</a>
+                <a href="#">Cookie Settings</a>
+            </div>
+            <div>
+                <i class="fas fa-universal-access" style="font-size: 24px; color: #fff;"></i>
+            </div>
+        </div>
+    </footer>
+
+    <div class="feedback-btn">Feedback</div>
+
+</body>
+</html>

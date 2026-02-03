@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AMD TradeOff Tools Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 全局設定 --- */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            background-color: #f9fafb; /* 與 amdsupport.html 一致的淺灰背景 */
+            color: #333; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            min-width: 1200px; 
+            overflow-x: auto; 
+        }
+
+        /* --- Header --- */
+        header { 
+            background-color: #ffffff; 
+            padding: 0 30px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-shrink: 0; 
+        }
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { height: 26px; width: auto; display: block; } /* AMD Logo 保持原色 */
+        .title { 
+            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
+            border-left: 2px solid #ed1c24; padding-left: 15px; 
+        }
+        
+        .back-btn { 
+            color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+        /* --- Hero Section (Title) --- */
+        .hub-hero {
+            background-color: #ffffff;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .hub-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .hub-title span { color: #ED1C24; }
+
+        .hub-desc {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* --- 工具卡片區域 --- */
+        .tools-section {
+            padding: 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1; /* 讓內容撐開 */
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center; /* 置中 */
+            gap: 40px; /* 卡片間距 */
+            flex-wrap: wrap;
+        }
+
+        /* 參考 amdsupport.html 的卡片風格 */
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb; /* 淺灰邊框 */
+            border-radius: 8px;
+            padding: 40px 30px;
+            width: 320px; /* 固定寬度 */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            text-decoration: none; /* 移除連結底線 */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 上方紅色裝飾線 (Hover 時出現) */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 0;
+            background-color: #ED1C24;
+            transition: height 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: #d1d5db;
+        }
+        .card:hover::before { height: 4px; }
+
+        /* Icon 圓圈 */
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            color: #555;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .card:hover .icon-circle {
+            background-color: #ED1C24;
+            color: #fff;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            color: #111;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 0; /* 移除底部間距，因為這是最後一個元素 */
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
+            <div class="title">TradeOff Tools Hub</div>
+        </div>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </header>
+
+    <div class="hub-hero">
+        <h1 class="hub-title">Data Center <span>TradeOff Hub</span></h1>
+        <p class="hub-desc">A suite of advanced modeling tools designed to analyze performance, improve efficiency, and calculate TCO for AMD AI power solutions.</p>
+    </div>
+
+    <div class="tools-section">
+        <div class="cards-container">
+            
+            <a href="ac-vs-dc.html" class="card">
+                <div class="icon-circle"><i class="fas fa-bolt"></i></div>
+                <h3>Power Path Efficiency</h3>
+                <p>Compare end-to-end power distribution efficiency across Legacy AC, Modern AC, and HVDC +/-400v DC architectures.</p>
+            </a>
+
+            <a href="battery-tco.html" class="card">
+                <div class="icon-circle"><i class="fas fa-battery-full"></i></div>
+                <h3>LTO BBU vs VRLA TCO</h3>
+                <p>Compare the 15-year Total Cost of Ownership between modern Lithium-Ion and traditional Lead-Acid UPS batteries.</p>
+            </a>
+
+            <a href="data-center-v2.html" class="card">
+                <div class="icon-circle"><i class="fas fa-building"></i></div>
+                <h3>Capital Cost</h3>
+                <p>Calculate total data center capital cost, rack count, and facility area based on capacity and density.</p>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>
