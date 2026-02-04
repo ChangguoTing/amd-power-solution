@@ -161,17 +161,10 @@
                 </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC UPS Efficiency</label>
+                        <label>Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="ups_ac" min="90" max="99" step="0.1" value="96.3" oninput="calc()">
-                            <span class="val-display" id="val_ups_ac">96.3%</span>
-                        </div>
-                    </div>
-                    <div class="control-row">
-                        <label>DC UPS Efficiency</label>
-                        <div class="slider-container">
-                            <input type="range" id="ups_dc" min="90" max="99" step="0.1" value="96.5" oninput="calc()">
-                            <span class="val-display" id="val_ups_dc">96.5%</span>
+                            <input type="range" id="eff_stage1" min="90" max="99.9" step="0.1" value="96.3" oninput="calc()">
+                            <span class="val-display" id="val_stage1">96.3%</span>
                         </div>
                     </div>
                 </div>
@@ -183,10 +176,10 @@
                 </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC PDU Efficiency</label>
+                        <label>Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="pdu_ac" min="95" max="99.9" step="0.1" value="98.3" oninput="calc()">
-                            <span class="val-display" id="val_pdu_ac">98.3%</span>
+                            <input type="range" id="eff_stage2" min="90" max="99.9" step="0.1" value="98.3" oninput="calc()">
+                            <span class="val-display" id="val_stage2">98.3%</span>
                         </div>
                     </div>
                 </div>
@@ -200,8 +193,8 @@
                     <div class="control-row">
                         <label>Distribution Wiring Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="wire" min="98" max="99.9" step="0.1" value="99.5" oninput="calc()">
-                            <span class="val-display" id="val_wire">99.5%</span>
+                            <input type="range" id="eff_dist" min="95" max="99.9" step="0.1" value="99.5" oninput="calc()">
+                            <span class="val-display" id="val_dist">99.5%</span>
                         </div>
                     </div>
                 </div>
@@ -209,21 +202,14 @@
 
             <div class="input-group">
                 <div class="group-header">
-                    IT Bus Bar / HVDC Cable <i class="far fa-question-circle"></i>
+                    IT Bus Bar <i class="far fa-question-circle"></i>
                 </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Modern AC Power Supply Efficiency</label>
+                        <label>Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="psu_ac" min="85" max="99" step="0.1" value="93.2" oninput="calc()">
-                            <span class="val-display" id="val_psu_ac">93.2%</span>
-                        </div>
-                    </div>
-                    <div class="control-row">
-                        <label>Modern DC Power Supply Efficiency</label>
-                        <div class="slider-container">
-                            <input type="range" id="psu_dc" min="85" max="99" step="0.1" value="94.1" oninput="calc()">
-                            <span class="val-display" id="val_psu_dc">94.1%</span>
+                            <input type="range" id="eff_stage3" min="90" max="99.9" step="0.1" value="99.0" oninput="calc()">
+                            <span class="val-display" id="val_stage3">99.0%</span>
                         </div>
                     </div>
                 </div>
@@ -235,13 +221,10 @@
                 </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label style="flex:0.5;">Cooling Architecture</label>
-                        <div style="flex:1;">
-                            <select class="styled-select">
-                                <option>Traditional chilled water system</option>
-                                <option>Air cooled chiller</option>
-                                <option>Direct Expansion (DX)</option>
-                            </select>
+                        <label>Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="eff_stage4" min="80" max="99.9" step="0.1" value="96.0" oninput="calc()">
+                            <span class="val-display" id="val_stage4">96.0%</span>
                         </div>
                     </div>
                 </div>
@@ -254,10 +237,10 @@
                 <div class="result-header">Power Path Efficiency (%)</div>
                 <div class="chart-area"><canvas id="chartEff"></canvas></div>
                 <div class="custom-legend">
-                    <div class="legend-item"><div class="color-box" style="background:#D1D5DB"></div>Legacy</div>
-                    <div class="legend-item"><div class="color-box" style="background:#9CA3AF"></div>Modern AC</div>
-                    <div class="legend-item"><div class="color-box" style="background:#6B7280"></div>480 VAC</div>
-                    <div class="legend-item"><div class="color-box" style="background:#ED1C24"></div>HVDC +/-400V</div>
+                    <div class="legend-item"><div class="color-box" style="background:#D1D5DB"></div>Infrastructure Eff.</div>
+                    <div class="legend-item"><div class="color-box" style="background:#9CA3AF"></div>Power Distribution Eff.</div>
+                    <div class="legend-item"><div class="color-box" style="background:#6B7280"></div>IT Power Eff.</div>
+                    <div class="legend-item"><div class="color-box" style="background:#ED1C24"></div>Total Power Eff.</div>
                 </div>
             </div>
         </div>
@@ -270,7 +253,7 @@
         Chart.defaults.font.size = 12;
         
         const colors = ['#D1D5DB', '#9CA3AF', '#6B7280', '#ED1C24']; 
-        const labels = ['Legacy', 'Modern AC', '480 VAC', 'HVDC +/-400V'];
+        const labels = ['Infrastructure Eff.', 'Power Distribution Eff.', 'IT Power Eff.', 'Total Power Eff.'];
 
         let chartEff;
 
@@ -301,34 +284,33 @@
         }
 
         function calc() {
-            // 固定 Legacy Baseline
-            const legUps = 0.88;
-            const legPdu = 0.95;
-            const legWire = 0.98;
-            const legPsu = 0.82;
+            // 固定 Legacy Baseline (約 67%)
+            const effLegacy = 0.88 * 0.95 * 0.98 * 0.82;
 
-            // 讀取 Modern 輸入
-            const upsAc = parseFloat(document.getElementById('ups_ac').value) / 100;
-            const upsDc = parseFloat(document.getElementById('ups_dc').value) / 100;
-            const pduAc = parseFloat(document.getElementById('pdu_ac').value) / 100;
-            const wire = parseFloat(document.getElementById('wire').value) / 100;
-            const psuAc = parseFloat(document.getElementById('psu_ac').value) / 100;
-            const psuDc = parseFloat(document.getElementById('psu_dc').value) / 100;
+            // 讀取 5 個階段的 Efficiency 輸入
+            const s1 = parseFloat(document.getElementById('eff_stage1').value) / 100; // MV X'mer / SST
+            const s2 = parseFloat(document.getElementById('eff_stage2').value) / 100; // UPS / Sidecar
+            const dist = parseFloat(document.getElementById('eff_dist').value) / 100; // Distribution Wiring
+            const s3 = parseFloat(document.getElementById('eff_stage3').value) / 100; // IT Bus Bar
+            const s4 = parseFloat(document.getElementById('eff_stage4').value) / 100; // Power Supply / DC DC
 
             // 更新顯示文字
-            document.getElementById('val_ups_ac').innerText = (upsAc*100).toFixed(1) + "%";
-            document.getElementById('val_ups_dc').innerText = (upsDc*100).toFixed(1) + "%";
-            document.getElementById('val_pdu_ac').innerText = (pduAc*100).toFixed(1) + "%";
-            document.getElementById('val_wire').innerText = (wire*100).toFixed(1) + "%";
-            document.getElementById('val_psu_ac').innerText = (psuAc*100).toFixed(1) + "%";
-            document.getElementById('val_psu_dc').innerText = (psuDc*100).toFixed(1) + "%";
+            document.getElementById('val_stage1').innerText = (s1*100).toFixed(1) + "%";
+            document.getElementById('val_stage2').innerText = (s2*100).toFixed(1) + "%";
+            document.getElementById('val_dist').innerText = (dist*100).toFixed(1) + "%";
+            document.getElementById('val_stage3').innerText = (s3*100).toFixed(1) + "%";
+            document.getElementById('val_stage4').innerText = (s4*100).toFixed(1) + "%";
 
-            // 效率計算
-            const effLegacy = legUps * legPdu * legWire * legPsu;
-            const effModern = upsAc * pduAc * wire * psuAc;
-            const eff480 = effModern * 1.015; // 480V 假設比 Modern AC 高一點
-            const effHVDC = upsDc * 0.998 * (wire + 0.002) * psuDc;
+            // 計算總效率 (乘上所有係數)
+            const effModern = s1 * s2 * dist * s3 * s4;
+            
+            // 模擬 480V
+            const eff480 = effModern * 1.005; 
+            
+            // HVDC 
+            const effHVDC = effModern; 
 
+            // 組合圖表數據
             const effData = [effLegacy * 100, effModern * 100, eff480 * 100, effHVDC * 100];
 
             // 更新圖表

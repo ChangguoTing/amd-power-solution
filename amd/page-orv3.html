@@ -36,12 +36,20 @@
             font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
             border-left: 2px solid #ed1c24; padding-left: 15px; 
         }
-        .back-btn { 
+        
+        /* 導航按鈕容器 */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn { 
             color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
             display: flex; align-items: center; gap: 8px; padding: 8px 16px;
             border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
         }
-        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+        .nav-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
 
         /* --- 圖片地圖容器 --- */
         .map-wrapper {
@@ -91,7 +99,7 @@
             box-shadow: none;
         }
 
-        /* --- 設定 7 個 Solution 的垂直位置 (Top %) - 已根據您的設定更新 --- */
+        /* --- 設定 7 個 Solution 的垂直位置 (Top %) --- */
         .link-sol1 { top: 5%; }
         .link-sol2 { top: 16.6%; }
         .link-sol3 { top: 34%; }
@@ -109,7 +117,12 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
             <div class="title">ORV3 & AMD Standard Solution</div>
         </div>
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        
+        <div class="nav-right">
+            <a href="amdsupport.html" class="nav-btn"><i class="fas fa-search"></i> Solution Finder</a>
+            
+            <a href="index.html" class="nav-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
     </header>
 
     <div class="map-wrapper">

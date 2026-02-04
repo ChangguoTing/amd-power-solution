@@ -50,6 +50,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             max-width: 700px;
+            margin-bottom: 20px; /* 增加下方間距，讓多個下載項目分開 */
         }
 
         .split-download-container:hover {
@@ -127,10 +128,21 @@
 
             <div class="split-download-container">
                 <div class="file-info">
-                    <i class="fas fa-file-powerpoint"></i> <span>AMD/MSFT Helios 72 vs AMD Helios 72 N+N STD vs AMD Helios 72 ATS+LTO BBU</span>
+                    <i class="fas fa-file-powerpoint"></i> <span>MSFT UPS 2N v.s AMD BBU 2N v.s AMD ATS+LTO BBU</span>
                 </div>
                 
                 <a href="Power Solution ppt.pptx" download class="download-action-btn">
+                    <i class="fas fa-download"></i>
+                    <span>DOWNLOAD</span>
+                </a>
+            </div>
+
+            <div class="split-download-container">
+                <div class="file-info">
+                    <i class="fas fa-file-powerpoint"></i> <span>LVDC Sidecar v.s HVDC sidecar v.s SST Sidecar</span>
+                </div>
+                
+                <a href="#" download class="download-action-btn">
                     <i class="fas fa-download"></i>
                     <span>DOWNLOAD</span>
                 </a>

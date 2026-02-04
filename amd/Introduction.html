@@ -93,19 +93,16 @@
             margin: 0 auto;
         }
 
-        /* --- 熱區 (Hotspots) 修改樣式：完全隱形 --- */
+        /* --- 熱區 (Hotspots) --- */
         .hotspot {
             position: absolute;
-            /* 已改為透明 */
             background-color: transparent; 
-            
             cursor: pointer;
             display: block;
             z-index: 10;
             border-radius: 4px;
         }
         
-        /* Hover 時完全透明，無邊框 */
         .hotspot:hover {
             background-color: transparent;
             box-shadow: none;
@@ -141,7 +138,6 @@
             align-items: center;
         }
 
-        /* 紅色邊框標題樣式 */
         .red-border-title {
             border: 2px solid #ED1C24;
             color: #ED1C24;
@@ -172,14 +168,12 @@
             padding: 50px;
         }
         
-        /* 單欄佈局容器 */
         .single-product-container {
             padding: 50px;
             display: flex;
             justify-content: flex-start;
         }
         
-        /* 置中佈局容器 (給 Bus Bar / HVDC Sidecar 用) */
         .center-image-container {
             padding: 50px;
             display: flex;
@@ -208,6 +202,22 @@
             height: auto;
             object-fit: contain;
         }
+        
+        /* VRM 寬版圖片樣式 */
+        .product-img-wide {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* ✅ 新增：SST 中版圖片樣式 (讓圖片比 Wide 小一點) */
+        .product-img-medium {
+            width: 100%;
+            max-width: 280px; /* 縮小寬度限制 */
+            height: auto;
+            object-fit: contain;
+        }
 
         .product-info h3 {
             font-size: 1.3rem;
@@ -228,20 +238,18 @@
             color: #000;
         }
 
-        /* --- 其他大圖樣式 --- */
         .detail-image-full {
             width: 100%;
             height: auto;
             display: block;
         }
         
-        /* ✅ 修改：新增縮小版圖片樣式 (針對模糊圖檔) */
         .detail-image-small {
             width: 100%;
-            max-width: 600px; /* 限制最大寬度，避免拉伸 */
+            max-width: 600px;
             height: auto;
             display: block;
-            margin: 0 auto; /* 圖片置中 */
+            margin: 0 auto;
         }
         
         .anchor-point {
@@ -370,7 +378,18 @@
                 <div class="red-border-title">VRM</div>
                 <a href="#top" class="back-btn-blue">Back</a>
             </div>
-            <img src="image_placeholder.jpg" alt="VRM Detail" class="detail-image-full">
+            <div class="products-grid">
+                <div class="product-item">
+                    <img src="to14.png" alt="VRM Module" class="product-img-wide">
+                    <div class="product-info">
+                        <h3>VRM</h3>
+                        <p>Output Power: 6KW</p>
+                    </div>
+                </div>
+                <div class="product-item">
+                    <img src="to15.png" alt="VRM Specs" class="product-img-wide">
+                </div>
+            </div>
         </div>
 
 
@@ -435,7 +454,18 @@
                 <div class="red-border-title">SST</div>
                 <a href="#top" class="back-btn-blue">Back</a>
             </div>
-            <img src="image_placeholder.jpg" alt="SST Detail" class="detail-image-full">
+            <div class="products-grid">
+                <div class="product-item">
+                    <img src="to16.png" alt="SST Diagram" class="product-img-medium">
+                    <div class="product-info">
+                        <h3>SST System</h3>
+                        <p>Output Power: 840KW / 1.6MW<br>/ 2.4MW / 3.2MW</p>
+                    </div>
+                </div>
+                <div class="product-item">
+                    <img src="to17.png" alt="SST Cabinet" class="product-img-medium">
+                </div>
+            </div>
         </div>
 
     </div>
