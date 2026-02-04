@@ -94,28 +94,41 @@
         }
 
         /* --- 熱區 (Hotspots) --- */
+        /* ✅ 修改：完全透明隱形模式 */
         .hotspot {
             position: absolute;
             background-color: transparent; 
+            border: none; /* 無邊框 */
             cursor: pointer;
             display: block;
             z-index: 10;
             border-radius: 4px;
         }
         
+        /* Hover 時完全透明，無邊框 */
         .hotspot:hover {
             background-color: transparent;
             box-shadow: none;
         }
 
         /* 熱區位置 */
-        .spot-whip { top: 5%; left: 50%; width: 8%; height: 5%; }
-        .spot-lvdc-shelf { top: 16%; left: 44%; width: 13%; height: 6%; }
-        .spot-vrm { top: 19%; left: 67%; width: 5%; height: 4%; }
+
+        .spot-whip { top: 7%; left: 51%; width: 8%; height: 5%; }
+
+        .spot-lvdc-shelf { top: 19%; left: 44%; width: 13%; height: 6%; }
+
+        .spot-vrm { top: 21%; left: 67%; width: 5%; height: 4%; }
+
         .spot-lvdc-sidecar { top: 27%; left: 32%; width: 12%; height: 7%; }
-        .spot-busbar { top: 40%; left: 58%; width: 8%; height: 4%; }
+
+        .spot-hbusbar { top: 32%; left: 45%; width: 10%; height: 4%; }
+
+        .spot-busbar { top: 42%; left: 58%; width: 8%; height: 4%; }
+
         .spot-hvdc-sidecar { top: 47%; left: 32%; width: 12%; height: 7%; }
+
         .spot-hvdc-shelf { top: 59%; left: 55%; width: 12%; height: 7%; }
+
         .spot-sst { top: 78%; left: 19%; width: 7%; height: 6%; }
 
 
@@ -179,6 +192,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
 
         .product-item {
@@ -203,7 +217,6 @@
             object-fit: contain;
         }
         
-        /* VRM 寬版圖片樣式 */
         .product-img-wide {
             width: 100%;
             max-width: 400px;
@@ -211,10 +224,9 @@
             object-fit: contain;
         }
 
-        /* ✅ 新增：SST 中版圖片樣式 (讓圖片比 Wide 小一點) */
         .product-img-medium {
             width: 100%;
-            max-width: 280px; /* 縮小寬度限制 */
+            max-width: 280px;
             height: auto;
             object-fit: contain;
         }
@@ -284,12 +296,13 @@
             <h1 class="page-title">AI Power Solution Introduction</h1>
             
             <div style="position: relative; display: inline-block; width: 100%;">
-                <img src="inc4.svg" alt="System Overview" class="main-diagram">
+                <img src="inc8.svg" alt="System Overview" class="main-diagram">
 
                 <a href="#section-whip" class="hotspot spot-whip" title="Power Whip"></a>
                 <a href="#section-lvdc-shelf" class="hotspot spot-lvdc-shelf" title="LVDC Power Shelf"></a>
                 <a href="#section-vrm" class="hotspot spot-vrm" title="VRM"></a>
                 <a href="#section-lvdc-sidecar" class="hotspot spot-lvdc-sidecar" title="LVDC Sidecar"></a>
+                <a href="#section-hbusbar" class="hotspot spot-hbusbar" title="Horizontal Bus Bar"></a>
                 <a href="#section-busbar" class="hotspot spot-busbar" title="Bus Bar"></a>
                 <a href="#section-hvdc-sidecar" class="hotspot spot-hvdc-sidecar" title="HVDC Sidecar"></a>
                 <a href="#section-hvdc-shelf" class="hotspot spot-hvdc-shelf" title="HVDC Power Shelf"></a>
@@ -410,6 +423,18 @@
         </div>
 
 
+        <div id="section-hbusbar" class="detail-section">
+            <div class="section-nav">
+                <div class="red-border-title">Horizontal Bus Bar</div>
+                <a href="#top" class="back-btn-blue">Back</a>
+            </div>
+            <div class="center-image-container">
+                <img src="to18.png" alt="Horizontal Bus Bar" class="detail-image-small" style="max-width: 350px;">
+                <p style="font-size: 1.3rem; font-weight: 700; margin-top: 15px; color: #333;">33KW / 50V</p>
+            </div>
+        </div>
+
+
         <div id="section-busbar" class="detail-section">
             <div class="section-nav">
                 <div class="red-border-title">Bus Bar</div>
@@ -437,14 +462,32 @@
                 <div class="red-border-title">HVDC Power Shelf (BBU, CBU)</div>
                 <a href="#top" class="back-btn-blue">Back</a>
             </div>
-            <div class="single-product-container">
+            <div class="products-grid">
+                
                 <div class="product-item">
-                    <img src="to13.png" alt="HVDC Power Shelf" class="product-img">
+                    <img src="to19.png" alt="HVDC BBU Shelf" class="product-img">
                     <div class="product-info">
-                        <h3>HVDC Power Shelf</h3>
+                        <h3>HVDC BBU Shelf</h3>
+                        <p>150KW / +/-400V</p>
+                    </div>
+                </div>
+
+                <div class="product-item">
+                    <img src="to20.png" alt="HVDC CBU Shelf" class="product-img">
+                    <div class="product-info">
+                        <h3>HVDC CBU Shelf</h3>
+                        <p>96KW / +/-400V<br>102kW / +/-400V</p>
+                    </div>
+                </div>
+
+                <div class="product-item">
+                    <img src="to13.png" alt="HVDC DCDC Power Shelf" class="product-img">
+                    <div class="product-info">
+                        <h3>HVDC DCDC Power Shelf</h3>
                         <p>+/-400V Input<br>100KW / 50V<br>AMD AI Power</p>
                     </div>
                 </div>
+
             </div>
         </div>
 

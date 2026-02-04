@@ -221,10 +221,17 @@
                 </div>
                 <div class="group-body">
                     <div class="control-row">
-                        <label>Efficiency</label>
+                        <label>Power Supply Efficiency</label>
                         <div class="slider-container">
-                            <input type="range" id="eff_stage4" min="80" max="99.9" step="0.1" value="96.0" oninput="calc()">
-                            <span class="val-display" id="val_stage4">96.0%</span>
+                            <input type="range" id="eff_stage4_1" min="80" max="99.9" step="0.1" value="96.0" oninput="calc()">
+                            <span class="val-display" id="val_stage4_1">96.0%</span>
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <label>DC DC Efficiency</label>
+                        <div class="slider-container">
+                            <input type="range" id="eff_stage4_2" min="80" max="99.9" step="0.1" value="98.0" oninput="calc()">
+                            <span class="val-display" id="val_stage4_2">98.0%</span>
                         </div>
                     </div>
                 </div>
@@ -253,6 +260,7 @@
         Chart.defaults.font.size = 12;
         
         const colors = ['#D1D5DB', '#9CA3AF', '#6B7280', '#ED1C24']; 
+        // 修改 Labels
         const labels = ['Infrastructure Eff.', 'Power Distribution Eff.', 'IT Power Eff.', 'Total Power Eff.'];
 
         let chartEff;
@@ -284,34 +292,43 @@
         }
 
         function calc() {
-            // 固定 Legacy Baseline (約 67%)
-            const effLegacy = 0.88 * 0.95 * 0.98 * 0.82;
-
-            // 讀取 5 個階段的 Efficiency 輸入
-            const s1 = parseFloat(document.getElementById('eff_stage1').value) / 100; // MV X'mer / SST
-            const s2 = parseFloat(document.getElementById('eff_stage2').value) / 100; // UPS / Sidecar
-            const dist = parseFloat(document.getElementById('eff_dist').value) / 100; // Distribution Wiring
-            const s3 = parseFloat(document.getElementById('eff_stage3').value) / 100; // IT Bus Bar
-            const s4 = parseFloat(document.getElementById('eff_stage4').value) / 100; // Power Supply / DC DC
+            // 讀取各階段輸入
+            const mv_sst = parseFloat(document.getElementById('eff_stage1').value) / 100;
+            const ups_sidecar = parseFloat(document.getElementById('eff_stage2').value) / 100;
+            const dist = parseFloat(document.getElementById('eff_dist').value) / 100;
+            const it_busbar = parseFloat(document.getElementById('eff_stage3').value) / 100;
+            const psu = parseFloat(document.getElementById('eff_stage4_1').value) / 100;
+            const dcdc = parseFloat(document.getElementById('eff_stage4_2').value) / 100;
 
             // 更新顯示文字
-            document.getElementById('val_stage1').innerText = (s1*100).toFixed(1) + "%";
-            document.getElementById('val_stage2').innerText = (s2*100).toFixed(1) + "%";
+            document.getElementById('val_stage1').innerText = (mv_sst*100).toFixed(1) + "%";
+            document.getElementById('val_stage2').innerText = (ups_sidecar*100).toFixed(1) + "%";
             document.getElementById('val_dist').innerText = (dist*100).toFixed(1) + "%";
-            document.getElementById('val_stage3').innerText = (s3*100).toFixed(1) + "%";
-            document.getElementById('val_stage4').innerText = (s4*100).toFixed(1) + "%";
+            document.getElementById('val_stage3').innerText = (it_busbar*100).toFixed(1) + "%";
+            document.getElementById('val_stage4_1').innerText = (psu*100).toFixed(1) + "%";
+            document.getElementById('val_stage4_2').innerText = (dcdc*100).toFixed(1) + "%";
 
-            // 計算總效率 (乘上所有係數)
-            const effModern = s1 * s2 * dist * s3 * s4;
+            // --- 計算各部分效率 ---
             
-            // 模擬 480V
-            const eff480 = effModern * 1.005; 
-            
-            // HVDC 
-            const effHVDC = effModern; 
+            // 1. Infrastructure Eff. = MV X’mer / SST * UPS / Sidecar
+            const infraEff = mv_sst * ups_sidecar;
 
-            // 組合圖表數據
-            const effData = [effLegacy * 100, effModern * 100, eff480 * 100, effHVDC * 100];
+            // 2. Power Distribution Eff. = AC / HVDC Distribution
+            const powerDistEff = dist;
+
+            // 3. IT Power Eff. = IT Bus Bar * Power Supply * DC DC
+            const itPowerEff = it_busbar * psu * dcdc;
+
+            // 4. Total Power Eff. = 全部相乘
+            const totalPowerEff = infraEff * powerDistEff * itPowerEff;
+
+            // 組合圖表數據 (將小數轉為百分比)
+            const effData = [
+                infraEff * 100,
+                powerDistEff * 100,
+                itPowerEff * 100,
+                totalPowerEff * 100
+            ];
 
             // 更新圖表
             chartEff.data.datasets[0].data = effData;

@@ -33,9 +33,17 @@
         }
         .brand { display: flex; align-items: center; gap: 15px; }
         .brand img { height: 26px; width: auto; display: block; }
+        
+        /* 標題樣式：黑色文字 + 左側紅線 */
         .title { 
-            font-size: 18px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 1px;
-            border-left: 2px solid #ed1c24; padding-left: 15px; 
+            font-size: 18px; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            color: #333; 
+            letter-spacing: 1px;
+            border-left: 4px solid #ED1C24; /* 紅線 */
+            padding-left: 15px; 
+            background-color: transparent;
         }
         
         .back-btn { 
@@ -43,7 +51,7 @@
             display: flex; align-items: center; gap: 8px; padding: 8px 16px;
             border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
         }
-        .back-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+        .back-btn:hover { background-color: #ED1C24; color: #fff; border-color: #ED1C24; }
 
         /* --- 主佈局 --- */
         .container { 
@@ -82,11 +90,15 @@
             font-weight: 700; 
             border-radius: 4px; 
             display: flex; justify-content: flex-start; align-items: center;
-            border-left: 4px solid #ED1C24; 
+            border-left: 4px solid #ED1C24; /* 紅色 */
             text-transform: uppercase; letter-spacing: 0.5px;
             margin-bottom: 10px;
         }
-        
+        .group-subtitle {
+            text-transform: none; font-weight: normal; color: #666; margin-left: 10px; font-size: 13px;
+        }
+
+        /* 輸入列 */
         .input-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 12px; color: #4b5563; }
         .input-row label { flex: 1; font-weight: 600; }
         
@@ -94,8 +106,9 @@
             flex: 1.2; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 4px; 
             font-size: 13px; background: #fff; color: #374151; outline: none; 
         }
+        select:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
 
-        /* Range Slider */
+        /* Range Slider - 紅色 */
         .slider-container { flex: 1.2; display: flex; align-items: center; gap: 10px; }
         input[type="range"] {
             flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; outline: none;
@@ -116,13 +129,14 @@
         }
         .toggle-opt.active { background-color: #4b5563; color: #fff; border-color: #4b5563; }
 
-        /* Architecture Diagram Container - 調整高度 */
+        /* Architecture Diagram Container */
         .arch-diagram {
             border: 1px dashed #ccc; background: #fafafa; 
-            height: 45vh; min-height: 400px; 
+            height: 45vh;       
+            min-height: 420px;  
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-            flex-direction: column; overflow: hidden; padding: 0; margin-top: 10px;
+            flex-direction: column; overflow: hidden; padding: 10px; margin-top: 10px;
         }
         .arch-diagram svg { width: 100%; height: 100%; display: block; }
 
@@ -139,10 +153,23 @@
         }
         .result-row:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
+        /* 預設標籤 (綠底) */
         .res-label-box {
-            background-color: #8BC34A; color: #fff; padding: 5px 15px; font-weight: 700; font-size: 13px; border-radius: 4px;
-            width: 120px; text-align: center;
+            background-color: #8BC34A; /* 綠色 */
+            color: #fff; 
+            padding: 5px 15px; 
+            font-weight: 700; 
+            font-size: 13px; 
+            border-radius: 4px;
+            width: 150px; 
+            text-align: center;
         }
+
+        /* 紅底標籤 (HVDC Power Shelf) */
+        .res-label-red {
+            background-color: #ED1C24 !important;
+        }
+        
         .res-img-box {
             width: 100px; height: 60px; display: flex; align-items: center; justify-content: center;
             background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; overflow: hidden; 
@@ -156,15 +183,19 @@
             font-weight: 700; font-size: 14px; border-radius: 4px;
         }
 
-        /* BOM Button */
+        /* BOM Button - 藍色 */
         .bom-btn {
-            position: absolute; bottom: 20px; right: 20px;
-            background-color: #8BC34A; color: #fff; padding: 12px 25px;
+            background-color: #0E4E73; 
+            color: #fff; 
+            padding: 12px 25px;
             font-size: 15px; font-weight: 700; border: none; border-radius: 6px;
             cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: background 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; 
+            
+            margin: 30px auto 0 auto; 
+            width: fit-content;
         }
-        .bom-btn:hover { background-color: #7cb342; }
+        .bom-btn:hover { background-color: #003366; }
 
     </style>
 </head>
@@ -201,10 +232,10 @@
 
             <div class="input-row">
                 <label>Power Redundancy</label>
-                <select>
-                    <option>N</option>
-                    <option>N+1</option>
-                    <option>2N</option>
+                <select id="redundancy" onchange="calc()">
+                    <option value="N">N</option>
+                    <option value="N+1">N+1</option>
+                    <option value="2N">2N</option>
                 </select>
             </div>
 
@@ -219,8 +250,8 @@
             <div class="group-title">Power Device</div>
             
             <div class="input-row">
-                <label>Power Shelf</label>
-                <select id="power_shelf" onchange="calc()">
+                <label>HVDC Power Shelf</label>
+                <select id="shelf_select" onchange="calc()">
                     </select>
             </div>
 
@@ -243,6 +274,7 @@
 
             <div class="group-title">
                 IT Power Architecture
+                <span class="group-subtitle">- IT Rack with 54V Power</span>
             </div>
             <div class="arch-diagram" id="arch_display">
                 </div>
@@ -253,14 +285,8 @@
             <div class="result-header">Results</div>
 
             <div class="result-row">
-                <div class="res-label-box">Power Whip</div>
-                <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
-                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
-            </div>
-
-            <div class="result-row">
-                <div class="res-label-box">Power Shelf</div>
-                <div class="res-img-box"><img src="shelf.png" alt="Power Shelf"></div>
+                <div class="res-label-box res-label-red">HVDC Power Shelf</div>
+                <div class="res-img-box"><img src="to13.png" alt="HVDC Power Shelf"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
             </div>
 
@@ -310,49 +336,42 @@
             // 繪製 Solution 6 的架構圖
             drawArch(size);
 
-            const shelfSelect = document.getElementById('power_shelf');
+            const shelfSelect = document.getElementById('shelf_select');
             shelfSelect.innerHTML = ''; 
 
-            if (size === 42) {
-                // 根據圖片說明：42 inch 對應 200KW
-                let opt1 = new Option("42 inch 200KW 800V/50V", "200");
-                let opt2 = new Option("N.A", "0");
-                shelfSelect.add(opt1);
-                shelfSelect.add(opt2);
+            // ✅ HVDC Power Shelf 選項更新 (移除 800V 字樣)
+            if (size === 21) {
+                shelfSelect.add(new Option("21 inch 100KW / 50V", "100"));
+                shelfSelect.add(new Option("N.A", "0"));
             } else {
-                // 根據圖片說明：21 inch 對應 100KW
-                let opt1 = new Option("21 inch 100KW 800V/50V", "100");
-                let opt2 = new Option("N.A", "0");
-                shelfSelect.add(opt1);
-                shelfSelect.add(opt2);
+                shelfSelect.add(new Option("42 inch 200KW / 50V", "200"));
+                shelfSelect.add(new Option("N.A", "0"));
             }
 
             calc(); 
         }
 
-        // 修改：Solution 6 的 SVG 繪製邏輯 (根據截圖配色)
+        // SVG 架構圖
         function drawArch(size) {
             const container = document.getElementById('arch_display');
             let svgContent = '';
 
-            const colorBlueText = "#005691"; // 左側標題藍色
-            const colorLineBlue = "#003366"; // 左側線條深藍色
-            const colorLightGreen = "#8BC34A"; // Energy Storage 綠色框
-            const colorOrangeBorder = "#FF9800"; // Energy Storage 橘色邊框
+            const colorBlueText = "#005691";
+            const colorLineBlue = "#003366";
+            const colorLightGreen = "#8BC34A";
+            const colorOrangeBorder = "#FF9800";
             
-            const colorRackCyan = "#81D4FA"; // 淺藍色 PSU 區塊
-            const colorPink = "#F48FB1";     // Bus Bar 粉色
+            const colorRackCyan = "#81D4FA"; 
+            const colorPink = "#F48FB1"; 
             const colorPinkStroke = "#D81B60";
             const colorBlack = "#000000";
-            const colorRedText = "#D32F2F";  // 800V 紅色文字
-            const colorGreenText = "#388E3C"; // LVDC 綠色文字
+            const colorRedText = "#D32F2F"; 
+            const colorGreenText = "#388E3C";
 
-            // 寬度設定，放大 viewbox 來縮小內容
             const viewBoxW = 500; 
-            const viewBoxH = 300; // 加大高度
+            const viewBoxH = 300; 
 
-            // 左側共用部分：HVDC 800V Header + Energy Storage Image + Box
-            // 使用外部 energy.png
+            // 左側共用部分 (Energy Storage)
             const commonSVG = `
                 <text x="50" y="30" font-family="Arial" font-size="24" fill="black">HVDC 800V</text>
                 
@@ -367,7 +386,6 @@
                         <stop offset="100%" style="stop-color:#263238;stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <rect x="10" y="80" width="120" height="80" fill="url(#imgPlaceholder)" />
                 <image href="energy.png" x="10" y="80" width="120" height="80" preserveAspectRatio="none" />
 
                 <rect x="160" y="70" width="80" height="60" fill="${colorLightGreen}" stroke="${colorOrangeBorder}" stroke-width="2"/>
@@ -376,7 +394,8 @@
             `;
 
             if (size === 21) {
-                // 21 inch Rack (窄版)
+                // 21 inch Rack
+                // LVDC 置中計算: X=355, W=10 => Center=360
                 svgContent = `
                 <svg viewBox="-20 -20 ${viewBoxW} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     ${commonSVG}
@@ -394,7 +413,8 @@
                 </svg>
                 `;
             } else {
-                // 42 inch Rack (寬版)
+                // 42 inch Rack
+                // LVDC 置中計算: X=385, W=10 => Center=390
                 svgContent = `
                 <svg viewBox="-20 -20 ${viewBoxW + 60} ${viewBoxH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     ${commonSVG}
@@ -404,7 +424,7 @@
                     <text x="390" y="45" font-family="Arial" font-size="16" font-weight="bold" fill="${colorRedText}" text-anchor="middle">800V</text>
                     
                     <rect x="302" y="60" width="176" height="50" fill="${colorRackCyan}" stroke="${colorBlack}" stroke-width="1"/>
-                    <text x="390" y="85" font-family="Arial" font-size="14" fill="black" text-anchor="middle">PSU *BBU *CBU</text>
+                    <text x="390" y="85" font-family="Arial" font-size="12" fill="black" text-anchor="middle">PSU *BBU *CBU</text>
                     
                     <rect x="385" y="110" width="10" height="110" fill="${colorPink}" stroke="${colorPinkStroke}" stroke-width="1"/>
                     
@@ -419,26 +439,27 @@
         function calc() {
             const cap = parseInt(document.getElementById('it_capacity').value) || 0;
             
-            const shelfPower = parseInt(document.getElementById('power_shelf').value);
+            // 1. HVDC Power Shelf (統一公式)
+            const shelfPower = parseInt(document.getElementById('shelf_select').value);
             const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
 
+            // 2. BBU (統一公式)
             const bbuVal = document.getElementById('bbu_select').value;
             let bbuPower = 0;
-            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
-                bbuPower = 72;
-            }
+            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") bbuPower = 72;
             const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
 
+            // 3. CBU (統一公式)
             const cbuVal = parseInt(document.getElementById('cbu_select').value);
             const cbuQty = cbuVal > 0 ? Math.ceil(cap / cbuVal) : 0;
 
-            const accessoryQty = shelfQty > 0 ? shelfQty : 0;
+            // 4. Rack Bus Bar
+            const busQty = 1;
 
             document.getElementById('qty_shelf').innerText = shelfQty;
             document.getElementById('qty_bbu').innerText = bbuQty;
             document.getElementById('qty_cbu').innerText = cbuQty;
-            document.getElementById('qty_whip').innerText = accessoryQty;
-            document.getElementById('qty_bus').innerText = accessoryQty;
+            document.getElementById('qty_bus').innerText = busQty;
         }
 
         init();
