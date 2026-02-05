@@ -161,11 +161,11 @@
             font-weight: 700; 
             font-size: 13px; 
             border-radius: 4px;
-            width: 150px; 
+            width: 180px; /* 稍微加寬 */
             text-align: center;
         }
 
-        /* 紅底標籤 (HVDC Power Shelf) */
+        /* 紅底標籤 */
         .res-label-red {
             background-color: #ED1C24 !important;
         }
@@ -223,7 +223,7 @@
             </div>
             
             <div class="input-row">
-                <label>IT Capacity (kW)</label>
+                <label>IT Rack Capacity (kW)</label>
                 <div class="slider-container">
                     <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
                     <span class="slider-val" id="cap_display">200</span>
@@ -250,7 +250,7 @@
             <div class="group-title">Power Device</div>
             
             <div class="input-row">
-                <label>HVDC Power Shelf</label>
+                <label>HVDC DCDC Power Shelf</label>
                 <select id="shelf_select" onchange="calc()">
                     </select>
             </div>
@@ -285,8 +285,8 @@
             <div class="result-header">Results</div>
 
             <div class="result-row">
-                <div class="res-label-box res-label-red">HVDC Power Shelf</div>
-                <div class="res-img-box"><img src="to13.png" alt="HVDC Power Shelf"></div>
+                <div class="res-label-box res-label-red" style="font-size:12px;">HVDC DCDC Power Shelf</div>
+                <div class="res-img-box"><img src="to13.png" alt="HVDC DCDC Power Shelf"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
             </div>
 
@@ -333,13 +333,12 @@
             document.getElementById('btn-42').classList.remove('active');
             document.getElementById(`btn-${size}`).classList.add('active');
 
-            // 繪製 Solution 6 的架構圖
             drawArch(size);
 
             const shelfSelect = document.getElementById('shelf_select');
             shelfSelect.innerHTML = ''; 
 
-            // ✅ HVDC Power Shelf 選項更新 (移除 800V 字樣)
+            // HVDC DCDC Power Shelf 選項
             if (size === 21) {
                 shelfSelect.add(new Option("21 inch 100KW / 50V", "100"));
                 shelfSelect.add(new Option("N.A", "0"));
@@ -351,7 +350,7 @@
             calc(); 
         }
 
-        // SVG 架構圖
+        // SVG 架構圖 (HVDC 800V + Energy Storage + LVDC置中)
         function drawArch(size) {
             const container = document.getElementById('arch_display');
             let svgContent = '';
@@ -439,14 +438,18 @@
         function calc() {
             const cap = parseInt(document.getElementById('it_capacity').value) || 0;
             
-            // 1. HVDC Power Shelf (統一公式)
+            // 1. HVDC DCDC Power Shelf (統一公式)
             const shelfPower = parseInt(document.getElementById('shelf_select').value);
             const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
 
             // 2. BBU (統一公式)
             const bbuVal = document.getElementById('bbu_select').value;
             let bbuPower = 0;
-            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") bbuPower = 72;
+            if (bbuVal === "72_LFP" || bbuVal === "72_LTO") {
+                bbuPower = 72;
+            } else if (bbuVal === "33_NCM") {
+                bbuPower = 33;
+            }
             const bbuQty = bbuPower > 0 ? Math.ceil(cap / bbuPower) : 0;
 
             // 3. CBU (統一公式)

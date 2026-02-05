@@ -34,7 +34,7 @@
         .brand { display: flex; align-items: center; gap: 15px; }
         .brand img { height: 26px; width: auto; display: block; }
         
-        /* ✅ 修改：還原為原本的黑色/灰色風格 (左側紅線) */
+        /* 標題樣式：黑色文字 (灰色調) + 左側紅線 */
         .title { 
             font-size: 18px; 
             font-weight: 600; 
@@ -151,9 +151,9 @@
         }
         .result-row:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* 預設標籤樣式 (紅色背景) */
+        /* ✅ 修改：預設標籤樣式改回綠色 (#8BC34A) */
         .res-label-box {
-            background-color: #ED1C24; /* 紅色 */
+            background-color: #8BC34A; /* 綠色 */
             color: #fff; 
             padding: 5px 15px; 
             font-weight: 700; 
@@ -163,11 +163,6 @@
             text-align: center;
         }
 
-        /* Power Whip 專用綠色背景 */
-        .res-label-green {
-            background-color: #8BC34A !important;
-        }
-        
         .res-img-box {
             width: 100px; height: 60px; display: flex; align-items: center; justify-content: center;
             background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; overflow: hidden; 
@@ -221,7 +216,7 @@
             </div>
             
             <div class="input-row">
-                <label>IT Capacity (kW)</label>
+                <label>IT Rack Capacity (kW)</label>
                 <div class="slider-container">
                     <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
                     <span class="slider-val" id="cap_display">200</span>
@@ -284,31 +279,31 @@
             <div class="result-header">Results</div>
 
             <div class="result-row">
-                <div class="res-label-box res-label-green">Power Whip</div>
+                <div class="res-label-box">Power Whip</div>
                 <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
             </div>
 
             <div class="result-row">
-                <div class="res-label-box">HVDC Power Shelf</div>
+                <div class="res-label-box">Power Shelf</div>
                 <div class="res-img-box"><img src="shelf.png" alt="Power Shelf"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
             </div>
 
             <div class="result-row">
-                <div class="res-label-box">HVDC BBU Shelf</div>
+                <div class="res-label-box">BBU Shelf</div>
                 <div class="res-img-box"><img src="shelf.png" alt="BBU Shelf"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bbu">--</div></div>
             </div>
 
             <div class="result-row">
-                <div class="res-label-box">HVDC CBU Shelf</div>
+                <div class="res-label-box">CBU Shelf</div>
                 <div class="res-img-box"><img src="shelf.png" alt="CBU Shelf"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_cbu">--</div></div>
             </div>
 
             <div class="result-row">
-                <div class="res-label-box">HVDC Rack Bus Bar</div>
+                <div class="res-label-box">Rack Bus Bar</div>
                 <div class="res-img-box"><img src="rack.png" alt="Rack Bus Bar"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_bus">--</div></div>
             </div>

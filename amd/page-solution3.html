@@ -160,7 +160,7 @@
             font-weight: 700; 
             font-size: 13px; 
             border-radius: 4px;
-            width: 150px; 
+            width: 180px; /* 加寬以容納新文字 */
             text-align: center;
         }
         
@@ -217,7 +217,7 @@
             </div>
             
             <div class="input-row">
-                <label>IT Capacity (kW)</label>
+                <label>IT Rack Capacity (kW)</label>
                 <div class="slider-container">
                     <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
                     <span class="slider-val" id="cap_display">200</span>
@@ -271,7 +271,7 @@
             <div class="result-header">Results</div>
 
             <div class="result-row">
-                <div class="res-label-box">Power Whip</div>
+                <div class="res-label-box" style="font-size:12px;">200A Sidecar Power Whip</div>
                 <div class="res-img-box"><img src="whip.png" alt="Power Whip"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
             </div>
@@ -319,27 +319,25 @@
             document.getElementById('btn-42').classList.remove('active');
             document.getElementById(`btn-${size}`).classList.add('active');
 
-            // 繪製 Solution 3 的架構圖 (Sidecar + Rack)
             drawArch(size);
-
             calc(); 
         }
 
-        // 重新繪製符合您要求的 SVG 架構圖
+        // SVG 架構圖 (Sidecar 在左，Rack 在右)
         function drawArch(size) {
             const container = document.getElementById('arch_display');
             let svgContent = '';
 
-            const colorSidecar = "#558B2F"; // 墨綠色 Sidecar
+            const colorSidecar = "#558B2F"; 
             const colorGreenText = "#4CAF50";
             const colorPink = "#F8BBD0";
             const colorPinkStroke = "#D81B60";
             const colorBlack = "#000000";
-            const colorPurpleLine = "#E040FB"; // 左側紫色輸入線
+            const colorPurpleLine = "#E040FB"; 
 
             if (size === 21) {
                 // 21 inch Rack (窄)
-                // ✅ 修改：調整 LVDC 的 text-anchor 為 middle，並計算中心點 x=310
+                // LVDC 置中 (X=310)
                 svgContent = `
                 <svg viewBox="-50 -30 480 320" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     
@@ -371,7 +369,7 @@
                 `;
             } else {
                 // 42 inch Rack (寬)
-                // ✅ 修改：調整 LVDC 的 text-anchor 為 middle，並計算中心點 x=345
+                // LVDC 置中 (X=345)
                 svgContent = `
                 <svg viewBox="-50 -30 550 320" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
                     
@@ -417,8 +415,8 @@
             const hbusPower = parseInt(document.getElementById('hbusbar_select').value);
             const hbusQty = hbusPower > 0 ? Math.ceil(cap / hbusPower) : 0;
 
-            // 3. Power Whip (跟隨 Sidecar 數量)
-            const whipQty = sidecarQty;
+            // ✅ 修改：200A Sidecar Power Whip = (IT Capacity / 120) * 2
+            const whipQty = Math.ceil((cap / 120) * 2);
 
             // 4. Rack Bus Bar (固定為 1)
             const busQty = 1;

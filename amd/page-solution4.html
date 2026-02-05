@@ -153,7 +153,7 @@
         }
         .result-row:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* 紅底白字標籤 (預設) */
+        /* 紅底白字標籤 (HVDC Sidecar & Shelf) */
         .res-label-box {
             background-color: #ED1C24; /* 紅色 */
             color: #fff; 
@@ -161,11 +161,11 @@
             font-weight: 700; 
             font-size: 13px; 
             border-radius: 4px;
-            width: 150px; 
+            width: 180px; 
             text-align: center;
         }
 
-        /* ✅ 綠底白字標籤 (給 Rack Bus Bar 用) */
+        /* 綠底白字標籤 (Whip & Bus Bar) */
         .res-label-green {
             background-color: #8BC34A !important;
         }
@@ -223,7 +223,7 @@
             </div>
             
             <div class="input-row">
-                <label>IT Capacity (kW)</label>
+                <label>IT Rack Capacity (kW)</label>
                 <div class="slider-container">
                     <input type="range" id="it_capacity" min="0" max="1000" step="50" value="200" oninput="updateCapDisplay(); calc();">
                     <span class="slider-val" id="cap_display">200</span>
@@ -257,7 +257,7 @@
             </div>
 
             <div class="input-row">
-                <label>HVDC Power Shelf</label>
+                <label>HVDC DCDC Power Shelf</label>
                 <select id="shelf_select" onchange="calc()">
                     </select>
             </div>
@@ -275,13 +275,19 @@
             <div class="result-header">Results</div>
 
             <div class="result-row">
+                <div class="res-label-box res-label-green" style="font-size:12px;">200A Sidecar Power Whip</div>
+                <div class="res-img-box"><img src="whip.png" alt="Whip"></div>
+                <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_whip">--</div></div>
+            </div>
+
+            <div class="result-row">
                 <div class="res-label-box">HVDC Sidecar</div>
                 <div class="res-img-box"><img src="to12.png" alt="HVDC Sidecar"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_sidecar">--</div></div>
             </div>
 
             <div class="result-row">
-                <div class="res-label-box">HVDC Power Shelf</div>
+                <div class="res-label-box" style="font-size:12px;">HVDC DCDC Power Shelf</div>
                 <div class="res-img-box"><img src="to13.png" alt="HVDC Power Shelf"></div>
                 <div class="res-qty-box"><div class="qty-title">Qty</div><div class="qty-val" id="qty_shelf">--</div></div>
             </div>
@@ -322,7 +328,7 @@
             const shelfSelect = document.getElementById('shelf_select');
             shelfSelect.innerHTML = ''; 
 
-            // HVDC Power Shelf 選項更新
+            // HVDC DCDC Power Shelf 選項更新
             if (size === 21) {
                 shelfSelect.add(new Option("21 inch 100KW / 50V", "100"));
             } else {
@@ -332,13 +338,13 @@
             calc(); 
         }
 
-        // SVG 架構圖 (LVDC 文字置中版)
+        // SVG 架構圖 (維持不變：Sidecar -> IT Rack)
         function drawArch(size) {
             const container = document.getElementById('arch_display');
             let svgContent = '';
 
             const colorSidecar = "#558B2F"; 
-            const colorGreenText = "#4CAF50"; // LVDC 文字顏色 (綠色)
+            const colorGreenText = "#4CAF50";
             const colorPink = "#F8BBD0";
             const colorPinkStroke = "#D81B60";
             const colorBlack = "#000000";
@@ -417,15 +423,19 @@
             const sidecarPower = parseInt(document.getElementById('sidecar_select').value);
             const sidecarQty = sidecarPower > 0 ? Math.ceil(cap / sidecarPower) : 0;
 
-            // 2. HVDC Power Shelf (100KW or 200KW) - 統一公式
+            // 2. HVDC DCDC Power Shelf (100KW or 200KW) - 統一公式
             const shelfPower = parseInt(document.getElementById('shelf_select').value);
             const shelfQty = shelfPower > 0 ? Math.ceil(cap / shelfPower) : 0;
 
-            // 3. Rack Bus Bar (固定為 1)
+            // 3. 200A Sidecar Power Whip = ceil(IT / 120) * 2
+            const whipQty = Math.ceil(cap / 120) * 2;
+
+            // 4. Rack Bus Bar (固定為 1)
             const busQty = 1;
 
             document.getElementById('qty_sidecar').innerText = sidecarQty;
             document.getElementById('qty_shelf').innerText = shelfQty;
+            document.getElementById('qty_whip').innerText = whipQty;
             document.getElementById('qty_bus').innerText = busQty;
         }
 
