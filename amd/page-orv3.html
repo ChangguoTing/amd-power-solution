@@ -57,27 +57,9 @@
             flex: 1;
             padding: 40px;
             display: flex;
-            flex-direction: column; /* ✅ 修改：改為垂直排列 */
-            align-items: center;    /* ✅ 修改：置中對齊 */
+            flex-direction: column;
+            align-items: center;
             overflow-y: auto;
-        }
-
-        /* ✅ 新增：Solution Finder 按鈕的容器 */
-        .finder-bar {
-            width: 1200px; /* 與地圖等寬 */
-            display: flex;
-            justify-content: flex-end; /* 靠右對齊 (Solution 上方) */
-            margin-bottom: 10px;
-        }
-
-        /* ✅ 特別樣式：讓 Finder 按鈕稍微顯眼一點 (可選) */
-        .finder-btn {
-            background-color: #ED1C24; 
-            color: #fff; 
-            border-color: #ED1C24;
-        }
-        .finder-btn:hover {
-            background-color: #c4171e;
         }
 
         .map-container {
@@ -86,7 +68,8 @@
             background: #ffffff;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
             border-radius: 8px;
-            overflow: hidden;
+            /* ✅ 重要：設定 visible 讓右側箭頭超出邊框時也能顯示 */
+            overflow: visible; 
             border: 1px solid #e5e7eb;
         }
 
@@ -102,20 +85,42 @@
             right: 0.5%;      
             width: 19%;       
             height: 6.5%; 
-            
-            /* 已改為透明 */
             background-color: transparent; 
-            
             cursor: pointer;
             display: block;
             z-index: 10;
             border-radius: 4px;
         }
         
-        /* Hover 時完全透明，無邊框 */
         .hotspot:hover {
-            background-color: transparent;
-            box-shadow: none;
+            background-color: rgba(237, 28, 36, 0.1);
+            box-shadow: 0 0 8px rgba(237, 28, 36, 0.3);
+        }
+
+        /* --- ✅ 修改：箭頭指示 (從右到左) --- */
+        .hotspot::before {
+            content: "\f060"; /* Font Awesome Arrow Left (向左箭頭) */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            
+            /* 位置調整到右側 */
+            left: auto; 
+            right: -30px; /* 放在熱區右邊 */
+            
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ED1C24;
+            font-size: 24px; /* 稍微放大一點 */
+            opacity: 1; 
+            transition: all 0.3s ease;
+            animation: bounceLeft 1.5s infinite;
+        }
+
+        /* ✅ 修改：向左跳動動畫 */
+        @keyframes bounceLeft {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            50% { transform: translateY(-50%) translateX(-5px); } /* 向左移動 */
         }
 
         /* --- 設定 7 個 Solution 的垂直位置 (Top %) --- */
@@ -144,22 +149,16 @@
 
     <div class="map-wrapper">
         
-        <div class="finder-bar">
-            <a href="amdsupport.html" class="nav-btn finder-btn">
-                <i class="fas fa-search"></i> Solution Finder
-            </a>
-        </div>
-
         <div class="map-container">
             <img src="orv3-solution.svg" alt="ORV3 and AMD Standard Solution Architecture" class="main-image">
 
-            <a href="page-solution1.html" class="hotspot link-sol1" title="Solution 1"></a>
-            <a href="page-solution2.html" class="hotspot link-sol2" title="Solution 2"></a>
-            <a href="page-solution3.html" class="hotspot link-sol3" title="Solution 3"></a>
-            <a href="page-solution4.html" class="hotspot link-sol4" title="Solution 4"></a>
-            <a href="page-solution5.html" class="hotspot link-sol5" title="Solution 5"></a>
-            <a href="page-solution6.html" class="hotspot link-sol6" title="Solution 6"></a>
-            <a href="page-solution7.html" class="hotspot link-sol7" title="Solution 7"></a>
+            <a href="page-solution1.html" class="hotspot link-sol1" title="Click to view Solution 1 details"></a>
+            <a href="page-solution2.html" class="hotspot link-sol2" title="Click to view Solution 2 details"></a>
+            <a href="page-solution3.html" class="hotspot link-sol3" title="Click to view Solution 3 details"></a>
+            <a href="page-solution4.html" class="hotspot link-sol4" title="Click to view Solution 4 details"></a>
+            <a href="page-solution5.html" class="hotspot link-sol5" title="Click to view Solution 5 details"></a>
+            <a href="page-solution6.html" class="hotspot link-sol6" title="Click to view Solution 6 details"></a>
+            <a href="page-solution7.html" class="hotspot link-sol7" title="Click to view Solution 7 details"></a>
         </div>
     </div>
 
