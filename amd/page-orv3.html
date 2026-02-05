@@ -48,6 +48,7 @@
             color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600; 
             display: flex; align-items: center; gap: 8px; padding: 8px 16px;
             border: 1px solid #d1d5db; border-radius: 4px; transition: all 0.2s;
+            background-color: #fff;
         }
         .nav-btn:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
 
@@ -56,9 +57,27 @@
             flex: 1;
             padding: 40px;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column; /* ✅ 修改：改為垂直排列 */
+            align-items: center;    /* ✅ 修改：置中對齊 */
             overflow-y: auto;
+        }
+
+        /* ✅ 新增：Solution Finder 按鈕的容器 */
+        .finder-bar {
+            width: 1200px; /* 與地圖等寬 */
+            display: flex;
+            justify-content: flex-end; /* 靠右對齊 (Solution 上方) */
+            margin-bottom: 10px;
+        }
+
+        /* ✅ 特別樣式：讓 Finder 按鈕稍微顯眼一點 (可選) */
+        .finder-btn {
+            background-color: #ED1C24; 
+            color: #fff; 
+            border-color: #ED1C24;
+        }
+        .finder-btn:hover {
+            background-color: #c4171e;
         }
 
         .map-container {
@@ -119,13 +138,18 @@
         </div>
         
         <div class="nav-right">
-            <a href="amdsupport.html" class="nav-btn"><i class="fas fa-search"></i> Solution Finder</a>
-            
             <a href="index.html" class="nav-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
         </div>
     </header>
 
     <div class="map-wrapper">
+        
+        <div class="finder-bar">
+            <a href="amdsupport.html" class="nav-btn finder-btn">
+                <i class="fas fa-search"></i> Solution Finder
+            </a>
+        </div>
+
         <div class="map-container">
             <img src="orv3-solution.svg" alt="ORV3 and AMD Standard Solution Architecture" class="main-image">
 

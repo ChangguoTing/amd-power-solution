@@ -165,14 +165,12 @@
             padding: 20px 30px;
             border: 1px solid #333;
             display: inline-block;
+            transition: border-color 0.2s;
         }
-        .subscribe-text {
-            font-size: 16px; font-weight: 600; color: #fff;
-        }
+        .subscribe-box:hover { border-color: #ED1C24; }
+        .subscribe-text { font-size: 16px; font-weight: 600; color: #fff; }
 
-        .social-icons {
-            display: flex; gap: 20px;
-        }
+        .social-icons { display: flex; gap: 20px; }
         .social-icons a { color: #fff; font-size: 20px; transition: color 0.2s; }
         .social-icons a:hover { color: #ED1C24; }
 
@@ -182,14 +180,10 @@
             gap: 40px; margin-bottom: 60px;
         }
 
-        .col-title {
-            font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #fff;
-        }
+        .col-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #fff; }
         .col-list { list-style: none; padding: 0; margin: 0; }
         .col-list li { margin-bottom: 10px; }
-        .col-list a {
-            color: #999; text-decoration: none; font-size: 14px; transition: color 0.2s;
-        }
+        .col-list a { color: #999; text-decoration: none; font-size: 14px; transition: color 0.2s; }
         .col-list a:hover { color: #fff; text-decoration: underline; }
 
         .footer-bottom {
@@ -199,12 +193,8 @@
             display: flex; justify-content: space-between; align-items: center;
             flex-wrap: wrap; gap: 20px;
         }
-        .legal-links {
-            display: flex; gap: 15px; flex-wrap: wrap;
-        }
-        .legal-links a {
-            color: #666; text-decoration: none; font-size: 12px;
-        }
+        .legal-links { display: flex; gap: 15px; flex-wrap: wrap; }
+        .legal-links a { color: #666; text-decoration: none; font-size: 12px; }
         .legal-links a:hover { color: #999; }
 
         .feedback-btn {
@@ -273,16 +263,18 @@
 
     <footer>
         <div class="footer-top">
-            <div class="subscribe-box">
-                <div class="subscribe-text">Subscribe to the latest news<br>from AMD</div>
-            </div>
+            <a href="https://www.amd.com/zh-tw/preferences/sign-up.html" style="text-decoration: none;">
+                <div class="subscribe-box">
+                    <div class="subscribe-text">Subscribe to the latest news<br>from AMD</div>
+                </div>
+            </a>
             <div class="social-icons">
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#"><i class="fas fa-times"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="https://www.linkedin.com/company/amd"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://twitter.com/AMD"><i class="fas fa-times"></i></a>
+                <a href="https://www.instagram.com/amd/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/user/amd"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/AMD"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://discord.com/invite/amd"><i class="fab fa-discord"></i></a>
             </div>
         </div>
 
@@ -290,60 +282,60 @@
             <div>
                 <div class="col-title">Company</div>
                 <ul class="col-list">
-                    <li><a href="#">About AMD</a></li>
-                    <li><a href="#">Management Team</a></li>
-                    <li><a href="#">Corporate Responsibility</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="https://www.amd.com/en/corporate/about-amd">About AMD</a></li>
+                    <li><a href="https://www.amd.com/en/corporate/leadership">Management Team</a></li>
+                    <li><a href="https://www.amd.com/en/corporate/corporate-responsibility">Corporate Responsibility</a></li>
+                    <li><a href="https://www.amd.com/en/corporate/careers">Careers</a></li>
+                    <li><a href="https://www.amd.com/en/corporate/contact">Contact Us</a></li>
                 </ul>
             </div>
             <div>
                 <div class="col-title">News & Events</div>
                 <ul class="col-list">
-                    <li><a href="#">Newsroom</a></li>
-                    <li><a href="#">Events</a></li>
-                    <li><a href="#">Media Library</a></li>
+                    <li><a href="https://www.amd.com/en/newsroom.html">Newsroom</a></li>
+                    <li><a href="https://www.amd.com/en/corporate/events">Events</a></li>
+                    <li><a href="https://www.amd.com/en/newsroom/media-library.html">Media Library</a></li>
                 </ul>
             </div>
             <div>
                 <div class="col-title">Resources</div>
                 <ul class="col-list">
-                    <li><a href="#">Developer Central</a></li>
-                    <li><a href="#">Blogs</a></li>
-                    <li><a href="#">Case Studies</a></li>
-                    <li><a href="#">Webinars</a></li>
-                    <li><a href="#">Explore Resources</a></li>
+                    <li><a href="https://developer.amd.com/">Developer Central</a></li>
+                    <li><a href="https://community.amd.com/t5/blogs/ct-p/blogs">Blogs</a></li>
+                    <li><a href="https://www.amd.com/en/resources/case-studies.html">Case Studies</a></li>
+                    <li><a href="https://webinar.amd.com/meet-the-experts-hub/en/home">Case Studies</a></li>
+                    <li><a href="https://www.amd.com/zh-tw/resources.html">Webinars</a></li>
                 </ul>
             </div>
             <div>
                 <div class="col-title">Partners</div>
                 <ul class="col-list">
-                    <li><a href="#">AMD Partner Hub</a></li>
-                    <li><a href="#">Authorized Distributors</a></li>
-                    <li><a href="#">AMD University Program</a></li>
+                    <li><a href="https://www.amd.com/en/partner.html">AMD Partner Hub</a></li>
+                    <li><a href="https://www.amd.com/zh-tw/partner/about-partners/authorized-distributors.html">Authorized Distributors</a></li>
+                    <li><a href="https://www.amd.com/zh-tw/corporate/university-program.html">AMD University Program</a></li>
                 </ul>
             </div>
             <div>
                 <div class="col-title">Investors</div>
                 <ul class="col-list">
-                    <li><a href="#">Investor Relations</a></li>
-                    <li><a href="#">Financial Information</a></li>
-                    <li><a href="#">Board of Directors</a></li>
-                    <li><a href="#">Governance Documents</a></li>
-                    <li><a href="#">SEC Filings</a></li>
+                    <li><a href="https://ir.amd.com/">Investor Relations</a></li>
+                    <li><a href="https://ir.amd.com/financial-information">Financial Information</a></li>
+                    <li><a href="https://ir.amd.com/leadership-governance/board-of-directors">Board of Directors</a></li>
+                    <li><a href="https://ir.amd.com/leadership-governance/governance-documents">Governance Documents</a></li>
+                    <li><a href="https://ir.amd.com/financial-information/sec-filings">SEC Filings</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="footer-bottom">
             <div class="legal-links">
-                <a href="#">Terms and Conditions</a>
-                <a href="#">Privacy</a>
-                <a href="#">Trademarks</a>
-                <a href="#">Supply Chain Transparency</a>
-                <a href="#">Fair & Open Competition</a>
-                <a href="#">UK Tax Strategy</a>
-                <a href="#">Cookies Policy</a>
+                <a href="https://www.amd.com/en/corporate/terms-and-conditions">Terms and Conditions</a>
+                <a href="https://www.amd.com/en/corporate/privacy">Privacy</a>
+                <a href="https://www.amd.com/en/corporate/trademarks">Trademarks</a>
+                <a href="https://www.amd.com/en/corporate/supply-chain-responsibility">Supply Chain Transparency</a>
+                <a href="https://www.amd.com/en/corporate/competition">Fair & Open Competition</a>
+                <a href="https://www.amd.com/en/corporate/uk-tax-strategy">UK Tax Strategy</a>
+                <a href="https://www.amd.com/en/corporate/cookies">Cookies Policy</a>
                 <a href="#">Cookie Settings</a>
             </div>
             <div>
