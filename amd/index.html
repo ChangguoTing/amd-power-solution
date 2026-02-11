@@ -84,20 +84,71 @@
 
         .menu-link:hover { background-color: #1a1a1a; color: #ED1C24; }
         .menu-arrow { font-size: 14px; color: #666; transition: transform 0.3s; }
+        /* 電腦版 Hover 旋轉箭頭 */
         .menu-link:hover .menu-arrow { color: #ED1C24; transform: rotate(-90deg); }
 
-        /* 子選單 */
+        /* 子選單 (電腦版預設樣式) */
         .sub-menu {
-            display: none; position: absolute; top: 0; left: 100%; width: 300px;
-            background-color: #0f0f0f; border: 1px solid #333; border-left: none;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5); padding: 0; margin: 0; list-style: none; z-index: 2001; 
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 100%; /* 往右飛出 */
+            width: 300px;
+            background-color: #0f0f0f; 
+            border: 1px solid #333; 
+            border-left: none;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5); 
+            padding: 0; 
+            margin: 0; 
+            list-style: none; 
+            z-index: 2001; 
         }
+        
+        /* 電腦版：滑鼠懸停時顯示 */
         .menu-item:hover .sub-menu { display: block; }
+        
         .sub-menu-item a {
             display: block; padding: 20px 25px; color: #ccc; text-decoration: none;
             font-size: 15px; border-bottom: 1px solid #222; transition: all 0.2s;
         }
         .sub-menu-item a:hover { color: #fff; background-color: #1a1a1a; border-left: 3px solid #ED1C24; padding-left: 22px; }
+
+        /* --- ✅ 新增：手機/平板版 響應式調整 --- */
+        @media (max-width: 768px) {
+            /* 在手機上，子選單改為垂直向下展開，不飛出 */
+            .sub-menu {
+                position: static; /* 取消絕對定位，讓它佔據空間 */
+                width: 100%;      /* 寬度填滿側邊欄 */
+                left: auto;
+                box-shadow: none;
+                border-top: 1px solid #222;
+                border-left: none;
+                background-color: #0a0a0a; /* 稍微深一點的背景以示區別 */
+            }
+
+            /* 手機版取消 Hover 觸發，避免選單閃爍或無法點擊 */
+            .menu-item:hover .sub-menu {
+                display: none;
+            }
+
+            /* 透過 JS 加入 .active class 來顯示子選單 */
+            .menu-item.active .sub-menu {
+                display: block;
+                animation: slideDown 0.3s ease;
+            }
+
+            /* 手機版展開時的箭頭動畫 (向下旋轉) */
+            .menu-item.active .menu-arrow {
+                transform: rotate(90deg);
+                color: #ED1C24;
+            }
+        }
+
+        /* 下拉動畫 */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* --- 英雄區塊 --- */
         .hero {
@@ -142,20 +193,12 @@
             padding: 20px 30px;
             border: 1px solid #333;
             display: inline-block;
-            transition: border-color 0.2s; /* 增加互動感 */
+            transition: border-color 0.2s;
         }
-        /* 讓訂閱區塊滑鼠移過時變色，提示可點擊 */
-        .subscribe-box:hover {
-            border-color: #ED1C24;
-        }
+        .subscribe-box:hover { border-color: #ED1C24; }
+        .subscribe-text { font-size: 16px; font-weight: 600; color: #fff; }
 
-        .subscribe-text {
-            font-size: 16px; font-weight: 600; color: #fff;
-        }
-
-        .social-icons {
-            display: flex; gap: 20px;
-        }
+        .social-icons { display: flex; gap: 20px; }
         .social-icons a { color: #fff; font-size: 20px; transition: color 0.2s; }
         .social-icons a:hover { color: #ED1C24; }
 
@@ -165,14 +208,10 @@
             gap: 40px; margin-bottom: 60px;
         }
 
-        .col-title {
-            font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #fff;
-        }
+        .col-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #fff; }
         .col-list { list-style: none; padding: 0; margin: 0; }
         .col-list li { margin-bottom: 10px; }
-        .col-list a {
-            color: #999; text-decoration: none; font-size: 14px; transition: color 0.2s;
-        }
+        .col-list a { color: #999; text-decoration: none; font-size: 14px; transition: color 0.2s; }
         .col-list a:hover { color: #fff; text-decoration: underline; }
 
         .footer-bottom {
@@ -182,12 +221,8 @@
             display: flex; justify-content: space-between; align-items: center;
             flex-wrap: wrap; gap: 20px;
         }
-        .legal-links {
-            display: flex; gap: 15px; flex-wrap: wrap;
-        }
-        .legal-links a {
-            color: #666; text-decoration: none; font-size: 12px;
-        }
+        .legal-links { display: flex; gap: 15px; flex-wrap: wrap; }
+        .legal-links a { color: #666; text-decoration: none; font-size: 12px; }
         .legal-links a:hover { color: #999; }
 
         .feedback-btn {
@@ -235,7 +270,7 @@
             </li>
 
             <li class="menu-item">
-                <div class="menu-link">
+                <div class="menu-link" onclick="toggleSubmenu(this)">
                     TCO Analysis
                     <i class="fas fa-chevron-right menu-arrow"></i>
                 </div>
@@ -313,9 +348,9 @@
             <div>
                 <div class="col-title">Resources</div>
                 <ul class="col-list">
-                    <li><a href="https://www.amd.com/zh-tw/support/download/drivers.html">Drivers & Support</a></li>
                     <li><a href="https://developer.amd.com/">Developer Central</a></li>
                     <li><a href="https://community.amd.com/t5/blogs/ct-p/blogs">Blogs</a></li>
+                    <li><a href="https://www.amd.com/en/resources/case-studies.html">Case Studies</a></li>
                     <li><a href="https://webinar.amd.com/meet-the-experts-hub/en/home">Case Studies</a></li>
                     <li><a href="https://www.amd.com/zh-tw/resources.html">Webinars</a></li>
                 </ul>
@@ -349,7 +384,6 @@
                 <a href="https://www.amd.com/en/corporate/competition">Fair & Open Competition</a>
                 <a href="https://www.amd.com/content/dam/amd/en/documents/corporate/amd-uk-tax-strategy.pdf">UK Tax Strategy</a>
                 <a href="https://www.amd.com/en/corporate/cookies">Cookies Policy</a>
-                
             </div>
             <div>
                 <i class="fas fa-universal-access" style="font-size: 24px; color: #fff;"></i>
@@ -360,9 +394,16 @@
     
 
     <script>
+        // 控制側邊欄開關
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('active');
+        }
+
+        // ✅ 新增：控制子選單開關 (手機版點擊觸發)
+        function toggleSubmenu(element) {
+            // 切換父層 li 的 active class，配合 CSS (max-width: 768px) 顯示子選單
+            element.parentElement.classList.toggle('active');
         }
     </script>
 

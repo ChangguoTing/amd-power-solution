@@ -144,6 +144,60 @@
             text-decoration: underline;
         }
 
+        /* --- ✅ 新增：手機版響應式調整 --- */
+        @media (max-width: 768px) {
+            body, html {
+                min-width: 100%; /* 允許手機版寬度縮小 */
+                overflow-x: hidden; /* 避免頁面整體左右晃動 */
+            }
+            
+            header {
+                min-width: 100%;
+                padding: 0 15px;
+            }
+
+            .support-hero {
+                padding: 100px 20px 40px 20px;
+            }
+            .support-hero h1 { font-size: 2rem; }
+            .support-hero h2 { font-size: 1.1rem; }
+
+            .selection-section {
+                padding: 30px 20px;
+                overflow-x: hidden; /* 隱藏外層捲軸 */
+            }
+
+            .cards-container {
+                /* ✅ 修改：強制橫向排列不換行 */
+                flex-direction: row; 
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                gap: 20px; /* 縮小間距 */
+                
+                /* ✅ 修改：開啟橫向捲動 */
+                overflow-x: auto;
+                padding-bottom: 20px; /* 預留捲軸空間 */
+                width: 100%;
+                
+                /* 隱藏捲軸樣式 (Optional) */
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* ✅ 修改：縮小卡片寬度 */
+            .card {
+                width: 260px;      /* 縮小寬度 */
+                min-width: 260px;  /* 固定最小寬度，防止被擠壓 */
+                padding: 20px;
+                flex-shrink: 0;    /* 防止卡片縮小 */
+            }
+            
+            .card h3 {
+                font-size: 1.1rem;
+                height: auto;
+                min-height: 40px;
+            }
+        }
+
         /* --- 頁尾 (AMD Footer Style) --- */
         footer {
             background-color: #000;
@@ -336,7 +390,6 @@
                 <a href="https://www.amd.com/en/corporate/competition">Fair & Open Competition</a>
                 <a href="https://www.amd.com/content/dam/amd/en/documents/corporate/amd-uk-tax-strategy.pdf">UK Tax Strategy</a>
                 <a href="https://www.amd.com/en/corporate/cookies">Cookies Policy</a>
-                
             </div>
             <div>
                 <i class="fas fa-universal-access" style="font-size: 24px; color: #fff;"></i>
