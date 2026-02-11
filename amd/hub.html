@@ -80,11 +80,12 @@
         }
 
         .cards-container {
-            display: flex;
-            justify-content: center; /* 置中 */
-            gap: 40px; /* 卡片間距 */
-            flex-wrap: wrap;
-        }
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
 
         /* 參考 amdsupport.html 的卡片風格 */
         .card {
@@ -102,6 +103,7 @@
             text-decoration: none; /* 移除連結底線 */
             position: relative;
             overflow: hidden;
+            flex: 0 0 320px;
         }
 
         /* 上方紅色裝飾線 (Hover 時出現) */
