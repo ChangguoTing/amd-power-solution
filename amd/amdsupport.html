@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+
+    <!-- ✅ 關鍵：讓手機真的用裝置寬度，@media 才會正確生效 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>AMD AI Power Solution Support</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,14 +14,10 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f9fafb; /* 下半部背景 */
+            background-color: #f9fafb;
             color: #333;
             height: 100%;
-
-            /* ✅ 手機優先：避免整頁左右滑動，讓「卡片區」自己橫向滑 */
-            overflow-x: hidden;
-
-            /* Footer 自然在底部 */
+            overflow-x: hidden; /* ✅ 手機避免整頁左右滑動 */
             display: flex;
             flex-direction: column;
         }
@@ -47,18 +46,19 @@
             box-sizing: border-box;
         }
 
-        .nav-left { display: flex; align-items: center; gap: 25px; }
-        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s;}
+        .nav-left { display: flex; align-items: center; gap: 25px; min-width: 0; }
+        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s; white-space: nowrap; }
         .back-home:hover { color: #ED1C24; }
         .amd-logo { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
-        .nav-right { display: flex; gap: 25px; align-items: center; }
+
+        .nav-right { display: flex; gap: 25px; align-items: center; flex-shrink: 0; }
         .nav-right i { font-size: 18px; color: #fff; cursor: pointer; }
 
-        /* --- Hero Section (黑色區域) --- */
+        /* --- Hero Section --- */
         .support-hero {
             background-color: #000;
             color: #fff;
-            padding: 150px 20px 80px 20px; /* 調整高度 */
+            padding: 150px 20px 80px 20px;
             text-align: center;
             background-image: radial-gradient(circle at center, #2a2a2a 0%, #000000 100%);
             border-bottom: 4px solid #ED1C24;
@@ -79,24 +79,24 @@
             margin: 0;
         }
 
-        /* --- 選擇卡片區域 --- */
+        /* --- 卡片區域 --- */
         .selection-section {
             padding: 60px 40px;
             max-width: 1400px;
             margin: 0 auto;
-            flex: 1; /* 讓內容撐開，Footer 會被推到底部 */
+            flex: 1;
         }
 
         .cards-container {
             display: flex;
             justify-content: center;
             gap: 60px;
-            flex-wrap: wrap; /* ✅ 桌機可換行（寬度不足時） */
+            flex-wrap: wrap; /* 桌機允許換行 */
         }
 
         .card {
             background: #fff;
-            border: 2px solid #8BC34A; /* 綠色邊框 */
+            border: 2px solid #8BC34A;
             border-radius: 6px;
             padding: 25px;
             width: 300px;
@@ -155,42 +155,31 @@
             text-decoration: underline;
         }
 
-        /* --- ✅ 手機版：維持一行 + 橫向滑動 --- */
-        @media (max-width: 768px) {
-            header {
-                padding: 0 15px;
-            }
+        /* =========================================================
+           ✅ 手機版：工具欄位（3張卡）維持同一行 + 橫向滑動
+           ========================================================= */
+        @media (max-width: 900px) {
+            header { padding: 0 15px; }
 
-            .support-hero {
-                padding: 110px 20px 40px 20px; /* header 固定，留足空間 */
-            }
-            .support-hero h1 { font-size: 2rem; }
-            .support-hero h2 { font-size: 1.1rem; }
-
+            /* ✅ 工具欄位（卡片列）維持一行：靠橫向滑動 */
             .selection-section {
-                padding: 30px 20px;
-
-                /* ✅ 這裡不要讓外層自己出現橫向捲動 */
-                overflow-x: hidden;
+                padding: 30px 16px;
+                overflow-x: hidden; /* 外層不滑，避免整頁左右晃 */
             }
 
             .cards-container {
-                /* ✅ 強制同一排，不換行 */
-                flex-wrap: nowrap;
-                justify-content: flex-start;
-                gap: 20px;
+                flex-wrap: nowrap !important;        /* 🔥 不換行 */
+                justify-content: flex-start !important;
+                gap: 16px !important;
 
-                /* ✅ 只讓卡片區橫向滑動 */
-                overflow-x: auto;
+                overflow-x: auto !important;         /* 🔥 卡片列自己滑 */
                 -webkit-overflow-scrolling: touch;
-
-                /* ✅ 左右留白更自然 */
-                padding: 0 4px 18px 4px;
+                padding: 0 4px 16px 4px;
             }
 
             .card {
-                /* ✅ 以 flex 固定寬度（比 width/min-width 更穩） */
-                flex: 0 0 260px;
+                flex: 0 0 260px;   /* 🔥 固定卡片寬度，確保不被擠壓 */
+                width: auto;       /* 避免 width:300px 跟 flex 打架 */
                 padding: 20px;
             }
 
@@ -199,9 +188,22 @@
                 height: auto;
                 min-height: 40px;
             }
+
+            /* ✅ Hero 文字縮小 */
+            .support-hero { padding: 110px 16px 40px 16px; }
+            .support-hero h1 { font-size: 2rem; }
+            .support-hero h2 { font-size: 1.1rem; }
+
+            /* ✅ Header 左側內容不要撐爆：縮短 gap / 移除多餘空白 */
+            .nav-left { gap: 12px; }
+            .back-home { font-size: 14px; }
+            .amd-logo { height: 22px; }
+
+            /* ✅ 你原本塞的空白 div（width:20px）在手機會浪費空間 */
+            .nav-left .spacer { display: none; }
         }
 
-        /* --- 頁尾 (AMD Footer Style) --- */
+        /* --- Footer --- */
         footer {
             background-color: #000;
             color: #fff;
@@ -257,13 +259,14 @@
         .legal-links a:hover { color: #999; }
 
         .feedback-btn {
-            position: fixed; right: 0; top: 50%; transform: translateY(-50%) rotate(-90deg) translateX(50%);
+            position: fixed; right: 0; top: 50%;
+            transform: translateY(-50%) rotate(-90deg) translateX(50%);
             transform-origin: right bottom;
             background: #666; color: #fff; padding: 10px 20px;
             font-size: 14px; cursor: pointer; z-index: 999;
         }
 
-        /* ✅ 手機 footer grid 也避免擠爆（可選，但建議） */
+        /* ✅ Footer RWD（避免手機擠爆） */
         @media (max-width: 900px) {
             .footer-links { grid-template-columns: repeat(2, 1fr); }
         }
@@ -271,17 +274,16 @@
             .footer-links { grid-template-columns: 1fr; }
             footer { padding: 50px 20px 20px 20px; }
         }
-
     </style>
 </head>
-<body>
 
+<body>
     <header>
         <div class="nav-left">
             <a href="index.html" class="back-home">
                 <i class="fas fa-arrow-left"></i> Home
             </a>
-            <div style="width: 20px;"></div>
+            <div class="spacer" style="width: 20px;"></div>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
         </div>
 
@@ -299,7 +301,6 @@
 
     <div class="selection-section">
         <div class="cards-container">
-
             <div class="card">
                 <h3>Introduction</h3>
                 <p>Overview of AMD Power Solutions and Partner Suppliers. Learn about our ecosystem and standardized approaches to data center power.</p>
@@ -325,7 +326,6 @@
                     <a href="amdspectra.html" class="card-link">Arcadia with Spectra Rack Platform &gt;</a>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -410,6 +410,5 @@
             </div>
         </div>
     </footer>
-
 </body>
 </html>

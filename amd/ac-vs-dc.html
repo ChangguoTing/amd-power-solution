@@ -2,10 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- ✅ 重要：沒有這行，手機常常不會照你預期的斷點與寬度行為 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AMD AC vs. DC Efficiency Calculator</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         /* --- 全局設定 --- */
         body { 
@@ -16,8 +21,17 @@
             height: 100vh; 
             display: flex; 
             flex-direction: column;
-            min-width: 1200px; 
-            overflow-x: auto; 
+
+            /* ✅ 不要用全域 min-width 卡死手機 */
+            overflow-x: hidden;
+        }
+
+        /* ✅ 桌機才需要 min-width（維持你原本桌機體驗） */
+        @media (min-width: 1200px) {
+            body {
+                min-width: 1200px;
+                overflow-x: auto;
+            }
         }
         
         /* Header */
@@ -41,12 +55,25 @@
         
         /* Layout */
         .container { 
-            display: flex; flex: 1; padding: 30px; gap: 30px; overflow: hidden; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box; 
+            display: flex; 
+            flex: 1; 
+            padding: 30px; 
+            gap: 30px; 
+            overflow: hidden; 
+            max-width: 1600px; 
+            margin: 0 auto; 
+            width: 100%; 
+            box-sizing: border-box; 
         }
         
         /* --- 左側：輸入區 --- */
         .left-panel { 
-            width: 45%; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; padding-right: 10px; 
+            width: 45%; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            overflow-y: auto; 
+            padding-right: 10px; 
         }
         
         /* --- 輸入群組樣式 (AMD 風格) --- */
@@ -57,7 +84,7 @@
         .group-header { 
             background: #f3f4f6; color: #111827; padding: 12px 20px; font-weight: 700; font-size: 13px; 
             display: flex; justify-content: space-between; border-bottom: 1px solid #d1d5db; 
-            text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #ED1C24; /* AMD 紅色 */
+            text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #ED1C24;
         }
         .group-header i { color: #6b7280; cursor: pointer; }
         
@@ -89,7 +116,12 @@
 
         /* --- 右側：結果區 --- */
         .right-panel { 
-            width: 55%; display: flex; flex-direction: column; gap: 20px; 
+            width: 55%; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px;
+
+            /* ✅ 桌機你原本是置中，OK */
             justify-content: center; 
         }
         
@@ -108,14 +140,41 @@
         .custom-legend { 
             display: flex; justify-content: center; gap: 25px; padding: 15px; 
             font-size: 13px; color: #4b5563; background: #fff; border-top: 1px solid #f3f4f6;
+            flex-wrap: wrap;
         }
         .legend-item { display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .color-box { width: 14px; height: 14px; border-radius: 3px; }
 
+        /* =========================================================
+           ✅ 手機版：維持左右兩欄 + 允許橫向滑動 + 圖表在右上角
+           ========================================================= */
+        @media (max-width: 900px) {
+            header { padding: 0 16px; }
+            .title { font-size: 14px; }
+
+            /* ✅ 讓整個兩欄容器可以水平滑動，不要堆疊 */
+            .container {
+                padding: 16px;
+                gap: 16px;
+                overflow-x: auto;               /* 🔥 讓你手機可滑到右邊的圖表 */
+                -webkit-overflow-scrolling: touch;
+                align-items: flex-start;         /* 🔥 左右欄都從頂部對齊 */
+            }
+
+            /* ✅ 強制兩欄都有固定寬度：手機才不會把右欄擠到下面 */
+            .left-panel  { flex: 0 0 430px; width: auto; max-height: calc(100vh - 70px - 32px); }
+            .right-panel { flex: 0 0 520px; width: auto; }
+
+            /* ✅ 關鍵：手機時把右欄改成頂部對齊（你要的「右上角」感覺） */
+            .right-panel { justify-content: flex-start; }
+
+            /* 小調整：避免圖表太高把第一屏撐爆 */
+            .result-box { height: 460px; }
+        }
     </style>
 </head>
-<body>
 
+<body>
     <header>
         <div class="brand">
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo">
@@ -126,11 +185,8 @@
 
     <div class="container">
         <div class="left-panel">
-            
             <div class="input-group">
-                <div class="group-header">
-                    Power Solution Selection
-                </div>
+                <div class="group-header">Power Solution Selection</div>
                 <div class="group-body">
                     <select id="solutionSelect" class="styled-select" onchange="updateSolutionImage()">
                         <option value="mtool1.svg">Traditional AC + LVDC IT</option>
@@ -145,9 +201,7 @@
             </div>
 
             <div class="input-group">
-                <div class="group-header">
-                    Architecture Diagram
-                </div>
+                <div class="group-header">Architecture Diagram</div>
                 <div class="group-body" style="padding: 10px; align-items: center; justify-content: center; background-color: #fff;">
                     <img id="solutionImage" src="mtool1.svg" alt="Solution Diagram" style="width: 100%; height: auto; border-radius: 4px; display: block;">
                 </div>
@@ -156,9 +210,7 @@
             <div style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 10px; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; margin-top: 10px;">INPUTS</div>
 
             <div class="input-group">
-                <div class="group-header">
-                    MV X’mer / SST <i class="far fa-question-circle"></i>
-                </div>
+                <div class="group-header">MV X’mer / SST <i class="far fa-question-circle"></i></div>
                 <div class="group-body">
                     <div class="control-row">
                         <label>Efficiency</label>
@@ -171,9 +223,7 @@
             </div>
 
             <div class="input-group">
-                <div class="group-header">
-                    UPS / Sidecar <i class="far fa-question-circle"></i>
-                </div>
+                <div class="group-header">UPS / Sidecar <i class="far fa-question-circle"></i></div>
                 <div class="group-body">
                     <div class="control-row">
                         <label>Efficiency</label>
@@ -186,9 +236,7 @@
             </div>
 
             <div class="input-group">
-                <div class="group-header">
-                    AC / HVDC Distribution <i class="far fa-question-circle"></i>
-                </div>
+                <div class="group-header">AC / HVDC Distribution <i class="far fa-question-circle"></i></div>
                 <div class="group-body">
                     <div class="control-row">
                         <label>Distribution Wiring Efficiency</label>
@@ -201,9 +249,7 @@
             </div>
 
             <div class="input-group">
-                <div class="group-header">
-                    IT Bus Bar <i class="far fa-question-circle"></i>
-                </div>
+                <div class="group-header">IT Bus Bar <i class="far fa-question-circle"></i></div>
                 <div class="group-body">
                     <div class="control-row">
                         <label>Efficiency</label>
@@ -216,9 +262,7 @@
             </div>
 
             <div class="input-group">
-                <div class="group-header">
-                    Power Supply / DC DC <i class="far fa-question-circle"></i>
-                </div>
+                <div class="group-header">Power Supply / DC DC <i class="far fa-question-circle"></i></div>
                 <div class="group-body">
                     <div class="control-row">
                         <label>Power Supply Efficiency</label>
@@ -236,7 +280,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="right-panel">
@@ -254,13 +297,11 @@
     </div>
 
     <script>
-        // 設定 Chart.js
         Chart.defaults.font.family = "'Segoe UI', sans-serif";
         Chart.defaults.color = '#374151'; 
         Chart.defaults.font.size = 12;
-        
+
         const colors = ['#D1D5DB', '#9CA3AF', '#6B7280', '#ED1C24']; 
-        // 修改 Labels
         const labels = ['Infrastructure Eff.', 'Power Distribution Eff.', 'IT Power Eff.', 'Total Power Eff.'];
 
         let chartEff;
@@ -292,7 +333,6 @@
         }
 
         function calc() {
-            // 讀取各階段輸入
             const mv_sst = parseFloat(document.getElementById('eff_stage1').value) / 100;
             const ups_sidecar = parseFloat(document.getElementById('eff_stage2').value) / 100;
             const dist = parseFloat(document.getElementById('eff_dist').value) / 100;
@@ -300,7 +340,6 @@
             const psu = parseFloat(document.getElementById('eff_stage4_1').value) / 100;
             const dcdc = parseFloat(document.getElementById('eff_stage4_2').value) / 100;
 
-            // 更新顯示文字
             document.getElementById('val_stage1').innerText = (mv_sst*100).toFixed(1) + "%";
             document.getElementById('val_stage2').innerText = (ups_sidecar*100).toFixed(1) + "%";
             document.getElementById('val_dist').innerText = (dist*100).toFixed(1) + "%";
@@ -308,21 +347,11 @@
             document.getElementById('val_stage4_1').innerText = (psu*100).toFixed(1) + "%";
             document.getElementById('val_stage4_2').innerText = (dcdc*100).toFixed(1) + "%";
 
-            // --- 計算各部分效率 ---
-            
-            // 1. Infrastructure Eff. = MV X’mer / SST * UPS / Sidecar
             const infraEff = mv_sst * ups_sidecar;
-
-            // 2. Power Distribution Eff. = AC / HVDC Distribution
             const powerDistEff = dist;
-
-            // 3. IT Power Eff. = IT Bus Bar * Power Supply * DC DC
             const itPowerEff = it_busbar * psu * dcdc;
-
-            // 4. Total Power Eff. = 全部相乘
             const totalPowerEff = infraEff * powerDistEff * itPowerEff;
 
-            // 組合圖表數據 (將小數轉為百分比)
             const effData = [
                 infraEff * 100,
                 powerDistEff * 100,
@@ -330,12 +359,10 @@
                 totalPowerEff * 100
             ];
 
-            // 更新圖表
             chartEff.data.datasets[0].data = effData;
             chartEff.update();
         }
 
-        // 更新圖片函式
         function updateSolutionImage() {
             const select = document.getElementById('solutionSelect');
             const img = document.getElementById('solutionImage');
@@ -345,7 +372,6 @@
         initCharts();
         calc();
         updateSolutionImage();
-
     </script>
 </body>
 </html>
