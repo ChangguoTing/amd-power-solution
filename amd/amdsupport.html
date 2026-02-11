@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <!-- ✅ 關鍵：讓手機真的用裝置寬度，@media 才會正確生效 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>AMD AI Power Solution Support</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,20 +10,14 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f9fafb;
+            background-color: #f9fafb; /* 下半部背景 */
             color: #333;
             height: 100%;
-            overflow-x: hidden; /* ✅ 手機避免整頁左右滑動 */
+            min-width: 1200px;
+            overflow-x: auto; 
+            /* 讓 Footer 自然流動在底部 */
             display: flex;
             flex-direction: column;
-        }
-
-        /* ✅ 桌機才需要 min-width: 1200px（不要讓手機吃到） */
-        @media (min-width: 1200px) {
-            body, html {
-                min-width: 1200px;
-                overflow-x: auto;
-            }
         }
 
         /* --- 頂部導航欄 --- */
@@ -46,22 +36,21 @@
             box-sizing: border-box;
         }
 
-        .nav-left { display: flex; align-items: center; gap: 25px; min-width: 0; }
-        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s; white-space: nowrap; }
+        .nav-left { display: flex; align-items: center; gap: 25px; }
+        .back-home { color: #fff; text-decoration: none; font-size: 18px; display: flex; align-items: center; gap: 8px; transition: color 0.2s;}
         .back-home:hover { color: #ED1C24; }
         .amd-logo { height: 26px; width: auto; display: block; filter: brightness(0) invert(1); }
-
-        .nav-right { display: flex; gap: 25px; align-items: center; flex-shrink: 0; }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
         .nav-right i { font-size: 18px; color: #fff; cursor: pointer; }
 
-        /* --- Hero Section --- */
+        /* --- Hero Section (黑色區域) --- */
         .support-hero {
             background-color: #000;
             color: #fff;
-            padding: 150px 20px 80px 20px;
+            padding: 150px 20px 80px 20px; /* 調整高度 */
             text-align: center;
             background-image: radial-gradient(circle at center, #2a2a2a 0%, #000000 100%);
-            border-bottom: 4px solid #ED1C24;
+            border-bottom: 4px solid #ED1C24; 
             flex-shrink: 0;
         }
 
@@ -79,24 +68,24 @@
             margin: 0;
         }
 
-        /* --- 卡片區域 --- */
+        /* --- 選擇卡片區域 --- */
         .selection-section {
             padding: 60px 40px;
             max-width: 1400px;
             margin: 0 auto;
-            flex: 1;
+            flex: 1; /* 讓內容撐開，Footer 會被推到底部 */
         }
 
         .cards-container {
             display: flex;
             justify-content: center;
-            gap: 60px;
-            flex-wrap: wrap; /* 桌機允許換行 */
+            gap: 60px; /* 縮小一點間距以容納三個卡片 */
+            flex-wrap: wrap;
         }
 
         .card {
             background: #fff;
-            border: 2px solid #8BC34A;
+            border: 2px solid #8BC34A; /* 綠色邊框 */
             border-radius: 6px;
             padding: 25px;
             width: 300px;
@@ -130,7 +119,7 @@
             color: #555;
             line-height: 1.5;
             margin-bottom: 25px;
-            flex-grow: 1;
+            flex-grow: 1; 
         }
 
         .card-links {
@@ -155,55 +144,61 @@
             text-decoration: underline;
         }
 
-        /* =========================================================
-           ✅ 手機版：工具欄位（3張卡）維持同一行 + 橫向滑動
-           ========================================================= */
-        @media (max-width: 900px) {
-            header { padding: 0 15px; }
+        /* --- ✅ 新增：手機版響應式調整 --- */
+        @media (max-width: 768px) {
+            body, html {
+                min-width: 100%; /* 允許手機版寬度縮小 */
+                overflow-x: hidden; /* 避免頁面整體左右晃動 */
+            }
+            
+            header {
+                min-width: 100%;
+                padding: 0 15px;
+            }
 
-            /* ✅ 工具欄位（卡片列）維持一行：靠橫向滑動 */
+            .support-hero {
+                padding: 100px 20px 40px 20px;
+            }
+            .support-hero h1 { font-size: 2rem; }
+            .support-hero h2 { font-size: 1.1rem; }
+
             .selection-section {
-                padding: 30px 16px;
-                overflow-x: hidden; /* 外層不滑，避免整頁左右晃 */
+                padding: 30px 20px;
+                overflow-x: hidden; /* 隱藏外層捲軸 */
             }
 
             .cards-container {
-                flex-wrap: nowrap !important;        /* 🔥 不換行 */
-                justify-content: flex-start !important;
-                gap: 16px !important;
-
-                overflow-x: auto !important;         /* 🔥 卡片列自己滑 */
+                /* ✅ 修改：強制橫向排列不換行 */
+                flex-direction: row; 
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                gap: 20px; /* 縮小間距 */
+                
+                /* ✅ 修改：開啟橫向捲動 */
+                overflow-x: auto;
+                padding-bottom: 20px; /* 預留捲軸空間 */
+                width: 100%;
+                
+                /* 隱藏捲軸樣式 (Optional) */
                 -webkit-overflow-scrolling: touch;
-                padding: 0 4px 16px 4px;
             }
 
+            /* ✅ 修改：縮小卡片寬度 */
             .card {
-                flex: 0 0 260px;   /* 🔥 固定卡片寬度，確保不被擠壓 */
-                width: auto;       /* 避免 width:300px 跟 flex 打架 */
+                width: 260px;      /* 縮小寬度 */
+                min-width: 260px;  /* 固定最小寬度，防止被擠壓 */
                 padding: 20px;
+                flex-shrink: 0;    /* 防止卡片縮小 */
             }
-
+            
             .card h3 {
                 font-size: 1.1rem;
                 height: auto;
                 min-height: 40px;
             }
-
-            /* ✅ Hero 文字縮小 */
-            .support-hero { padding: 110px 16px 40px 16px; }
-            .support-hero h1 { font-size: 2rem; }
-            .support-hero h2 { font-size: 1.1rem; }
-
-            /* ✅ Header 左側內容不要撐爆：縮短 gap / 移除多餘空白 */
-            .nav-left { gap: 12px; }
-            .back-home { font-size: 14px; }
-            .amd-logo { height: 22px; }
-
-            /* ✅ 你原本塞的空白 div（width:20px）在手機會浪費空間 */
-            .nav-left .spacer { display: none; }
         }
 
-        /* --- Footer --- */
+        /* --- 頁尾 (AMD Footer Style) --- */
         footer {
             background-color: #000;
             color: #fff;
@@ -217,8 +212,6 @@
             display: flex; justify-content: space-between; align-items: flex-start;
             border-bottom: 1px solid #333;
             padding-bottom: 40px; margin-bottom: 40px;
-            gap: 20px;
-            flex-wrap: wrap;
         }
 
         .subscribe-box {
@@ -231,7 +224,7 @@
         .subscribe-box:hover { border-color: #ED1C24; }
         .subscribe-text { font-size: 16px; font-weight: 600; color: #fff; }
 
-        .social-icons { display: flex; gap: 20px; flex-wrap: wrap; }
+        .social-icons { display: flex; gap: 20px; }
         .social-icons a { color: #fff; font-size: 20px; transition: color 0.2s; }
         .social-icons a:hover { color: #ED1C24; }
 
@@ -259,31 +252,22 @@
         .legal-links a:hover { color: #999; }
 
         .feedback-btn {
-            position: fixed; right: 0; top: 50%;
-            transform: translateY(-50%) rotate(-90deg) translateX(50%);
+            position: fixed; right: 0; top: 50%; transform: translateY(-50%) rotate(-90deg) translateX(50%);
             transform-origin: right bottom;
             background: #666; color: #fff; padding: 10px 20px;
             font-size: 14px; cursor: pointer; z-index: 999;
         }
 
-        /* ✅ Footer RWD（避免手機擠爆） */
-        @media (max-width: 900px) {
-            .footer-links { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 520px) {
-            .footer-links { grid-template-columns: 1fr; }
-            footer { padding: 50px 20px 20px 20px; }
-        }
     </style>
 </head>
-
 <body>
+
     <header>
         <div class="nav-left">
             <a href="index.html" class="back-home">
                 <i class="fas fa-arrow-left"></i> Home
             </a>
-            <div class="spacer" style="width: 20px;"></div>
+            <div style="width: 20px;"></div>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" class="amd-logo">
         </div>
 
@@ -301,6 +285,7 @@
 
     <div class="selection-section">
         <div class="cards-container">
+            
             <div class="card">
                 <h3>Introduction</h3>
                 <p>Overview of AMD Power Solutions and Partner Suppliers. Learn about our ecosystem and standardized approaches to data center power.</p>
@@ -311,10 +296,10 @@
             </div>
 
             <div class="card">
-                <h3>Solution Finder &amp; BOM Generator (AMD STD)</h3>
+                <h3>Solution Finder & BOM Generator (AMD STD)</h3>
                 <p>Select the appropriate power solution and generate the Bill of Materials (BOM) based on your specific requirements.</p>
                 <div class="card-links">
-                    <a href="page-orv3.html" class="card-link">Solution Selection &amp; BOM &gt;</a>
+                    <a href="page-orv3.html" class="card-link">Solution Selection & BOM &gt;</a>
                 </div>
             </div>
 
@@ -326,6 +311,7 @@
                     <a href="amdspectra.html" class="card-link">Arcadia with Spectra Rack Platform &gt;</a>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -358,7 +344,7 @@
                 </ul>
             </div>
             <div>
-                <div class="col-title">News &amp; Events</div>
+                <div class="col-title">News & Events</div>
                 <ul class="col-list">
                     <li><a href="https://www.amd.com/en/newsroom.html">Newsroom</a></li>
                     <li><a href="https://www.amd.com/en/corporate/events">Events</a></li>
@@ -401,7 +387,7 @@
                 <a href="https://www.amd.com/en/corporate/privacy">Privacy</a>
                 <a href="https://www.amd.com/en/corporate/trademarks">Trademarks</a>
                 <a href="https://www.amd.com/content/dam/amd/en/documents/corporate/cr/supply-chain-transparency.pdf">Supply Chain Transparency</a>
-                <a href="https://www.amd.com/en/corporate/competition">Fair &amp; Open Competition</a>
+                <a href="https://www.amd.com/en/corporate/competition">Fair & Open Competition</a>
                 <a href="https://www.amd.com/content/dam/amd/en/documents/corporate/amd-uk-tax-strategy.pdf">UK Tax Strategy</a>
                 <a href="https://www.amd.com/en/corporate/cookies">Cookies Policy</a>
             </div>
@@ -410,5 +396,8 @@
             </div>
         </div>
     </footer>
+
+    
+
 </body>
 </html>
